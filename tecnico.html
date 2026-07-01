@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRODENI — Registro de Visita</title>
+  <!-- PostHog Analytics -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u="posthog";for(void 0!==a&&(u=a),e[u]=function(){var t=function(){var t,e,o={};return t=Array.prototype.slice.call(arguments,0),(e=Object.assign({},t.shift())).distinct_id=e.distinct_id||e.uuid,t.unshift(e),t}();return e[u].push(t),t},e[u].people=e[u].people||[],e[u].toString=function(t){var e="posthog";return"posthog"!==u&&(e+="."+u),t||(e+=" (stub)"),e},e[u].people.toString=function(){return e[u].toString(1)+".people (stub)"},o="init Ie Ts Ms Ee Es Rs capture De calculateEventProperties Os register register_once register_for_session unregister unregister_for_session js getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags getPersonProperties setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Ds $s createPersonProfile Ls Fs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ps debug Is getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(e[u],o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_CJ3WV8q4dTBCiMN3z9apBwYcSUdRtDqzBTJoBjFoV3Ws', {
+      api_host: 'https://us.i.posthog.com',
+      defaults: '2025-05-24'
+    });
+    posthog.register({ app: 'visitas' });
+  </script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2E7D32">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PRODENI Campo">
+  <link rel="apple-touch-icon" href="Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    :root {
+      --verde-deep:  #1B5E20;
+      --verde-corp:  #2E7D32;
+      --verde-mid:   #388E3C;
+      --verde-light: #66BB6A;
+      --verde-pale:  #E8F5E9;
+      --tierra:      #5D4037;
+      --amarillo:    #F9A825;
+      --rojo:        #C62828;
+      --blanco:      #FFFFFF;
+      --bg:          #F0F4F0;
+      --border:      #D8E8D8;
+      --text:        #1A2E1A;
+      --text-soft:   #5A7A5A;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* ── HEADER ── */
+    .header { background:linear-gradient(135deg,var(--verde-corp),var(--verde-deep)); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 16px rgba(0,0,0,0.2); position:sticky; top:0; z-index:100; }
+    .header-brand { display:flex; align-items:center; gap:10px; }
+    .header-logo { width:36px; height:36px; border-radius:8px; background:white; padding:3px; object-fit:contain; flex-shrink:0; }
+    .header-name { font-size:1rem; font-weight:800; color:white; letter-spacing:1.5px; line-height:1.1; }
+    .header-slogan { font-size:0.6rem; font-weight:400; color:rgba(255,255,255,0.75); letter-spacing:1px; text-transform:uppercase; display:block; margin-top:1px; }
+    .header-right { display:flex; align-items:center; gap:8px; }
+    .conn-badge { display:flex; align-items:center; gap:5px; padding:5px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; background:rgba(255,255,255,0.15); color:white; }
+    .conn-dot { width:7px; height:7px; border-radius:50%; }
+    .conn-dot.online  { background:#A5D6A7; animation:pulse 2s infinite; }
+    .conn-dot.offline { background:#EF9A9A; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .user-chip { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.12); border-radius:20px; padding:5px 10px; }
+    .user-ava { width:27px; height:27px; border-radius:50%; background:var(--amarillo); color:var(--verde-deep); font-weight:800; font-size:0.82rem; display:flex; align-items:center; justify-content:center; }
+    .user-chip-name { font-size:0.82rem; color:white; font-weight:600; }
+    .btn-exit { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:white; padding:7px 12px; border-radius:8px; font-family:'Outfit',sans-serif; font-size:0.8rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s; }
+    .btn-exit:hover { background:rgba(255,255,255,0.25); }
+    @media(max-width:480px) { .user-chip-name,.conn-badge span:not(.conn-dot) { display:none; } .header-right { gap:5px; } }
+
+    /* ── MAIN ── */
+    .main { flex:1; display:flex; padding:16px; gap:16px; max-width:1080px; margin:0 auto; width:100%; }
+
+    /* ── FORM CARD ── */
+    .form-card { background:var(--blanco); border-radius:20px; border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.06); flex:1; overflow:hidden; }
+    .form-card-header { background:linear-gradient(135deg,var(--verde-pale),#C8E6C9); padding:18px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+    .form-card-icon { width:42px; height:42px; background:var(--verde-corp); border-radius:11px; display:flex; align-items:center; justify-content:center; color:white; font-size:1.05rem; }
+    .form-card-title { font-size:1rem; font-weight:700; color:var(--text); }
+    .form-card-sub   { font-size:0.78rem; color:var(--text-soft); margin-top:2px; }
+    .form-body { padding:22px 24px; }
+
+    /* ── SECTION DIVIDERS ── */
+    .section-hdr { display:flex; align-items:center; gap:10px; margin-bottom:14px; margin-top:20px; }
+    .section-hdr:first-child { margin-top:0; }
+    .section-hdr-line { flex:1; height:1px; background:var(--border); }
+    .section-hdr-label { font-size:0.7rem; font-weight:700; color:var(--verde-corp); text-transform:uppercase; letter-spacing:1.5px; white-space:nowrap; display:flex; align-items:center; gap:6px; }
+
+    /* ── FIELDS ── */
+    .fields-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .field-full { grid-column:1/-1; }
+    .field label { display:block; font-size:0.72rem; font-weight:700; color:var(--verde-corp); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+    .field label .req { color:var(--rojo); }
+    .field input, .field select, .field textarea {
+      width:100%; padding:11px 13px; border:2px solid var(--border); border-radius:10px;
+      font-family:'Outfit',sans-serif; font-size:0.9rem; color:var(--text); background:var(--bg);
+      outline:none; transition:all 0.2s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--verde-mid); background:white; box-shadow:0 0 0 3px rgba(56,142,60,0.1); }
+    .field textarea { resize:vertical; min-height:80px; }
+    .optional-tag { font-size:0.65rem; background:var(--verde-pale); color:var(--verde-corp); border-radius:4px; padding:1px 5px; font-weight:600; margin-left:5px; }
+
+    /* ── INTERÉS ESTRELLAS ── */
+    .stars-select option { font-size:0.95rem; }
+
+    /* ── PRODUCTOS PRODENI ── */
+    .productos-box { width:100%; padding:10px 13px; border:2px solid var(--border); border-radius:10px; font-family:'Outfit',sans-serif; font-size:0.88rem; background:var(--bg); min-height:68px; resize:vertical; outline:none; transition:all 0.2s; color:var(--text); }
+    .productos-box:focus { border-color:var(--verde-mid); background:white; box-shadow:0 0 0 3px rgba(56,142,60,0.1); }
+    .productos-hint { font-size:0.68rem; color:var(--text-soft); margin-top:3px; font-style:italic; }
+
+    /* ── GPS ── */
+    .gps-block { background:#F8FBF8; border:2px dashed var(--border); border-radius:14px; padding:18px; transition:all 0.3s; }
+    .gps-block.captured { border-color:var(--verde-light); background:var(--verde-pale); border-style:solid; }
+    .gps-status-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+    .gps-status-icon { width:40px; height:40px; border-radius:50%; background:#E8F5E9; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .gps-label  { font-size:0.85rem; font-weight:700; color:var(--text); }
+    .gps-coords { font-size:0.76rem; color:var(--text-soft); font-family:monospace; margin-top:2px; }
+    .gps-badge  { display:none; background:#E8F5E9; color:var(--verde-corp); border-radius:8px; padding:4px 10px; font-size:0.72rem; font-weight:700; }
+    .gps-progress-wrap { display:none; margin-bottom:12px; }
+    .gps-progress-bar-bg { height:4px; background:#E8F5E9; border-radius:2px; overflow:hidden; }
+    .gps-progress-bar { height:100%; background:var(--verde-corp); width:0%; transition:width 0.3s; border-radius:2px; }
+    .gps-progress-txt { font-size:0.72rem; color:var(--text-soft); margin-top:4px; }
+    .gps-buttons { display:flex; gap:8px; flex-wrap:wrap; }
+
+    /* ── BOTONES ── */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border:none; border-radius:10px; font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .btn-full { width:100%; }
+    .btn-green  { background:linear-gradient(135deg,var(--verde-mid),var(--verde-corp)); color:white; box-shadow:0 4px 14px rgba(46,125,50,0.3); }
+    .btn-green:hover  { transform:translateY(-1px); }
+    .btn-green:active { transform:translateY(0); }
+    .btn-teal   { background:#00796B; color:white; }
+    .btn-teal:hover { background:#00695C; }
+    .btn-outline { background:white; border:2px solid var(--border); color:var(--text-soft); }
+    .btn-outline:hover { border-color:var(--verde-mid); color:var(--verde-corp); background:var(--verde-pale); }
+    .btn-amber  { background:var(--amarillo); color:var(--verde-deep); font-weight:700; }
+    .btn-amber:hover { background:#F57F17; }
+    .btn-send   { background:linear-gradient(135deg,var(--verde-corp),var(--verde-deep)); color:white; padding:15px 22px; font-size:0.95rem; font-weight:700; box-shadow:0 6px 20px rgba(46,125,50,0.35); }
+    .btn-send:hover    { transform:translateY(-2px); box-shadow:0 10px 28px rgba(46,125,50,0.45); }
+    .btn-send:disabled { background:#CCC; color:#888; box-shadow:none; cursor:not-allowed; transform:none; }
+    .spinner { width:17px; height:17px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite; display:none; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .btn-send.loading .spinner { display:block; }
+    .btn-send.loading .btn-text { display:none; }
+
+    /* ── PANEL LATERAL ── */
+    .side-panel { width:290px; display:flex; flex-direction:column; gap:14px; flex-shrink:0; }
+    .side-card  { background:var(--blanco); border-radius:16px; border:1px solid var(--border); overflow:hidden; }
+    .side-card-header { padding:12px 16px; border-bottom:1px solid var(--border); font-size:0.85rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
+    .side-card-header i { color:var(--verde-corp); }
+    .side-card-body { padding:14px 16px; }
+
+    /* Stats */
+    .stat-trio { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
+    .stat-box { background:var(--bg); border-radius:10px; padding:10px; text-align:center; border:1px solid var(--border); }
+    .stat-num { font-size:1.5rem; font-weight:800; color:var(--verde-corp); line-height:1; }
+    .stat-lbl { font-size:0.65rem; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+
+    /* Enviados/pendientes */
+    .sync-row { display:flex; gap:8px; margin:8px 0 6px; }
+    .sync-box { flex:1; text-align:center; padding:6px; border-radius:8px; }
+    .sync-box.env { background:#E8F5E9; }
+    .sync-box.pend { background:#FFF8E1; }
+    .sync-num { font-size:1rem; font-weight:800; }
+    .sync-box.env .sync-num  { color:var(--verde-corp); }
+    .sync-box.pend .sync-num { color:#E65100; }
+    .sync-lbl { font-size:0.65rem; color:var(--text-soft); }
+
+    /* Progreso mes */
+    .mes-progress { margin:6px 0; }
+    .mes-progress-hdr { display:flex; justify-content:space-between; font-size:0.68rem; color:var(--text-soft); margin-bottom:3px; }
+    .mes-progress-bar-bg { height:5px; background:#E8F5E9; border-radius:3px; overflow:hidden; }
+    .mes-progress-bar { height:100%; background:var(--verde-corp); width:0%; transition:width 0.5s; border-radius:3px; }
+    .mes-reset-info { font-size:0.65rem; color:var(--text-soft); margin-top:2px; }
+
+    /* Visitas del día */
+    .visit-item { border-radius:8px; margin-bottom:6px; padding:8px 10px; font-size:0.78rem; border-left:3px solid; }
+    .visit-item.enviada  { background:#F0F4F0; border-left-color:var(--verde-corp); }
+    .visit-item.pendiente{ background:#FFF8E1; border-left-color:var(--amarillo); }
+    .visit-item-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:2px; }
+    .visit-item-name { font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:120px; }
+    .visit-item-badge { border-radius:10px; padding:1px 7px; font-size:0.62rem; font-weight:700; flex-shrink:0; }
+    .visit-item-badge.env  { background:var(--verde-corp); color:white; }
+    .visit-item-badge.pend { background:var(--amarillo); color:var(--verde-deep); }
+    .visit-item-meta { font-size:0.69rem; color:var(--text-soft); }
+
+    /* Pendientes */
+    .pending-item { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); gap:8px; }
+    .pending-item:last-child { border-bottom:none; }
+    .pending-name { font-size:0.8rem; font-weight:700; }
+    .pending-time { font-size:0.7rem; color:var(--text-soft); }
+    .pending-actions { display:flex; gap:4px; flex-shrink:0; }
+    .btn-icon-sm { width:28px; height:28px; border-radius:7px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.8rem; }
+    .btn-sync { background:#E8F5E9; color:var(--verde-corp); }
+    .btn-del  { background:#FFEBEE; color:#C62828; }
+
+    /* Toast */
+    .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(60px); background:#1A2E1A; color:white; padding:11px 18px; border-radius:10px; font-size:0.84rem; font-weight:600; z-index:9999; display:flex; align-items:center; gap:8px; box-shadow:0 6px 20px rgba(0,0,0,0.3); transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width:90vw; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    .t-success { background:#2E7D32; }
+    .t-error   { background:#C62828; }
+    .t-warn    { background:#E65100; }
+    .t-info    { background:#1A2E1A; }
+
+    /* Responsive */
+    @media(max-width:768px) {
+      .main { flex-direction:column; padding:10px; }
+      .side-panel { width:100%; }
+      .fields-grid { grid-template-columns:1fr; }
+      .field-full { grid-column:1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <img src="Logo.png" class="header-logo" id="h-logo" alt="PRODENI" onerror="this.style.display='none'">
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <span class="header-name" id="h-name">PRODENI</span>
+      <span class="header-slogan" id="h-slogan">Guardianes de la Tierra</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="conn-badge">
+      <div class="conn-dot" id="conn-dot"></div>
+      <span id="conn-txt">Online</span>
+    </div>
+    <div class="user-chip">
+      <div class="user-ava" id="u-ava">T</div>
+      <span class="user-chip-name" id="u-name">Técnico</span>
+    </div>
+    <!-- onclick directo — siempre funciona -->
+    <button class="btn-exit" onclick="prodeniLogout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span class="btn-exit-txt">Salir</span>
+    </button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ═══ FORMULARIO ═══════════════════════════════════════ -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="form-card-icon"><i class="fas fa-clipboard-list"></i></div>
+      <div>
+        <div class="form-card-title">Nueva Visita de Campo</div>
+        <div class="form-card-sub">Completa los datos de la visita al productor</div>
+      </div>
+    </div>
+    <div class="form-body">
+      <form id="formVisita">
+
+        <!-- SECCIÓN: DATOS DEL PRODUCTOR -->
+        <div class="section-hdr">
+          <div class="section-hdr-label"><i class="fas fa-user-circle"></i> Datos del Productor</div>
+          <div class="section-hdr-line"></div>
+        </div>
+
+        <div class="fields-grid">
+          <!-- Nombre del productor -->
+          <div class="field">
+            <label>Nombre del Productor <span class="req">*</span></label>
+            <input type="text" id="cliente" placeholder="Nombre completo" required autocapitalize="words">
+          </div>
+
+          <!-- Cultivo — inmediatamente después del productor -->
+          <div class="field">
+            <label>Cultivo <span class="optional-tag">Opcional</span></label>
+            <select id="cultivo" onchange="handleCultivoChange(this.value)">
+              <option value="">Selecciona...</option>
+              <option value="Berries">🫐 Berries</option>
+              <option value="Aguacate">🥑 Aguacate</option>
+              <option value="Granos básicos">🌾 Granos básicos</option>
+              <option value="Maíz">🌽 Maíz</option>
+              <option value="Tomate">🍅 Tomate</option>
+              <option value="Chile">🌶️ Chile</option>
+              <option value="Hortalizas">🥬 Hortalizas</option>
+              <option value="Flores">🌸 Flores</option>
+              <option value="Otro">✏️ Otro</option>
+            </select>
+            <!-- Campo libre si elige Otro — es el valor que se envía -->
+            <input type="text" id="cultivo-otro" placeholder="Especifica el cultivo..."
+                   style="display:none;margin-top:6px;" maxlength="80" autocapitalize="words">
+          </div>
+
+          <!-- Rol de quien atendió -->
+          <div class="field">
+            <label>Rol de quien atendió <span class="optional-tag">Opcional</span></label>
+            <select id="empresa">
+              <option value="">Selecciona...</option>
+              <option value="Propietario">👤 Propietario</option>
+              <option value="Ingeniero de campo">🌿 Ingeniero de campo</option>
+              <option value="Trabajador">👷 Trabajador</option>
+              <option value="Capataz">🧢 Capataz</option>
+              <option value="Encargado">📋 Encargado</option>
+              <option value="Otro">📝 Otro</option>
+            </select>
+          </div>
+
+          <!-- Nombre del predio -->
+          <div class="field">
+            <label>Nombre del Predio / Parcela <span class="optional-tag">Opcional</span></label>
+            <input type="text" id="predio" placeholder="Nombre o clave del predio" autocapitalize="words">
+          </div>
+        </div>
+
+        <!-- SECCIÓN: DATOS DE LA VISITA -->
+        <div class="section-hdr">
+          <div class="section-hdr-label"><i class="fas fa-clipboard-list"></i> Datos de la Visita</div>
+          <div class="section-hdr-line"></div>
+        </div>
+
+        <div class="fields-grid">
+
+          <!-- Objetivo -->
+          <div class="field field-full">
+            <label>Objetivo de la Visita <span class="req">*</span></label>
+            <select id="objetivo" required onchange="handleObjetivoChange(this.value)">
+              <option value="">Selecciona...</option>
+              <option value="Diagnóstico de cultivo">🔍 Diagnóstico de cultivo</option>
+              <option value="Seguimiento/Control">📋 Seguimiento / Control</option>
+              <option value="Visita de venta">💼 Visita de venta</option>
+              <option value="Capacitación al productor">📚 Capacitación al productor</option>
+              <option value="Supervisión de aplicación">🌱 Supervisión de aplicación</option>
+              <option value="Seguimiento de cosecha">🌾 Seguimiento de cosecha</option>
+              <option value="Propuesta de Desarrollo">🚀 Propuesta de Desarrollo</option>
+              <option value="Otro">📝 Otro</option>
+            </select>
+            <input type="text" id="objetivo-otro" placeholder="Describe el objetivo..."
+                   style="display:none;margin-top:7px;" maxlength="120" autocapitalize="sentences">
+            <div id="desarrollo-badge" style="display:none;margin-top:8px;padding:8px 12px;background:#1A2E1A;color:#F9A825;border-radius:8px;font-size:0.78rem;font-weight:700;">
+              🚀 Esta visita se marcará como Propuesta de Desarrollo en el sistema
+            </div>
+          </div>
+
+          <!-- Etapa fenológica -->
+          <div class="field">
+            <label>Etapa Fenológica <span class="optional-tag">Opcional</span></label>
+            <select id="etapa">
+              <option value="">Selecciona...</option>
+              <option value="Siembra / Transplante">Siembra / Transplante</option>
+              <option value="Desarrollo vegetativo">Desarrollo vegetativo</option>
+              <option value="Floración">Floración</option>
+              <option value="Fructificación">Fructificación</option>
+              <option value="Cosecha">Cosecha</option>
+              <option value="Post-cosecha">Post-cosecha</option>
+            </select>
+          </div>
+
+          <!-- Hectáreas -->
+          <div class="field">
+            <label>Superficie (hectáreas) <span class="optional-tag">Opcional</span></label>
+            <input type="number" id="hectareas" placeholder="ej. 2.5" step="0.1" min="0">
+          </div>
+
+          <!-- Productos PRODENI en uso -->
+          <div class="field field-full">
+            <label>Productos PRODENI en uso <span class="optional-tag">Opcional</span></label>
+            <textarea id="productos" class="productos-box"
+                      placeholder="ej. BioTriba, BioStrol, NutriOrganic...&#10;Lista los productos que el productor usa actualmente"
+                      autocapitalize="words"></textarea>
+            <div class="productos-hint"><i class="fas fa-info-circle"></i> Escribe uno por línea o separados por coma</div>
+          </div>
+
+          <!-- Interés en nuevos productos con estrellas -->
+          <div class="field field-full">
+            <label>Interés en nuestros productos <span class="optional-tag">Opcional</span></label>
+            <select id="interes" class="stars-select">
+              <option value="">— Selecciona nivel de interés —</option>
+              <option value="1">⭐ 1 estrella — Sin interés</option>
+              <option value="2">⭐⭐ 2 estrellas — Poco interés</option>
+              <option value="3">⭐⭐⭐ 3 estrellas — Interés medio</option>
+              <option value="4">⭐⭐⭐⭐ 4 estrellas — Muy interesado</option>
+              <option value="5">⭐⭐⭐⭐⭐ 5 estrellas — Compra probable</option>
+            </select>
+          </div>
+
+          <!-- Notas -->
+          <div class="field field-full">
+            <label>Notas / Observaciones <span class="optional-tag">Opcional</span></label>
+            <textarea id="notas" placeholder="Observaciones del cultivo, acuerdos, recomendaciones, próximos pasos..."
+                      autocapitalize="sentences"></textarea>
+          </div>
+        </div>
+
+        <!-- SECCIÓN: GPS -->
+        <div class="section-hdr">
+          <div class="section-hdr-label"><i class="fas fa-map-marker-alt"></i> Ubicación GPS</div>
+          <div class="section-hdr-line"></div>
+        </div>
+
+        <div class="gps-block" id="gpsBlock">
+          <div class="gps-status-row">
+            <div class="gps-status-icon" id="gps-status-icon">
+              <i class="fas fa-location-crosshairs" style="color:#2E7D32;font-size:1rem;"></i>
+            </div>
+            <div style="flex:1;">
+              <div class="gps-label"  id="gps-status-label">Ubicación no capturada</div>
+              <div class="gps-coords" id="gps-status-coords">Presiona el botón para capturar</div>
+            </div>
+            <div class="gps-badge" id="gps-badge">✓ Listo</div>
+          </div>
+
+          <div class="gps-progress-wrap" id="gps-progress-wrap">
+            <div class="gps-progress-bar-bg">
+              <div class="gps-progress-bar" id="gps-progress-bar"></div>
+            </div>
+            <div class="gps-progress-txt" id="gps-progress-txt">Buscando señal GPS...</div>
+          </div>
+
+          <div class="gps-buttons">
+            <!-- onclick directo — no depende de addEventListener -->
+            <button type="button" class="btn btn-teal" id="btnGps" onclick="captureGPS()" style="flex:1;">
+              <i class="fas fa-location-crosshairs"></i> Capturar GPS
+            </button>
+            <button type="button" class="btn btn-outline" id="btnMaps" onclick="toggleMapPicker()" style="flex:1;">
+              <i class="fas fa-map-marked-alt"></i> Seleccionar en Mapa
+            </button>
+          </div>
+
+          <!-- Leaflet map picker -->
+          <div id="map-picker-wrap" style="display:none;margin-top:12px;z-index:50;position:relative;">
+            <div style="font-size:0.78rem;font-weight:700;color:#1A2E1A;margin-bottom:6px;">
+              <i class="fas fa-hand-pointer"></i> Toca el mapa para marcar la ubicación exacta del predio
+            </div>
+            <div id="map-picker" style="height:260px;border-radius:10px;border:2px solid var(--verde-corp);overflow:hidden;"></div>
+            <div id="map-picker-coords" style="margin-top:6px;font-size:0.72rem;color:var(--text-soft);font-family:monospace;">Sin punto seleccionado</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button type="button" class="btn btn-teal" style="flex:1;font-size:0.8rem;" onclick="confirmMapPoint()">
+                <i class="fas fa-check"></i> Usar este punto
+              </button>
+              <button type="button" class="btn btn-outline" style="flex:1;font-size:0.8rem;" onclick="toggleMapPicker()">
+                <i class="fas fa-times"></i> Cerrar
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;font-size:0.72rem;color:#8FA88F;text-align:center;">
+            <i class="fas fa-info-circle"></i>
+            GPS del dispositivo capturado automáticamente · Mapa para ajuste manual
+          </div>
+        </div>
+
+        <!-- BOTONES ENVÍO -->
+        <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px;">
+          <button type="submit" class="btn btn-send btn-full" id="btnSend">
+            <div class="spinner"></div>
+            <span class="btn-text"><i class="fas fa-paper-plane"></i> &nbsp; Enviar Registro de Visita</span>
+          </button>
+          <button type="button" class="btn btn-amber btn-full" id="btnLocal" style="display:none;" onclick="submitForm(true)">
+            <i class="fas fa-cloud-download-alt"></i> Guardar Offline (sin conexión)
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL LATERAL ════════════════════════════════════ -->
+  <div class="side-panel">
+
+    <!-- Estadísticas -->
+    <div class="side-card">
+      <div class="side-card-header">
+        <i class="fas fa-chart-bar"></i> Mis Estadísticas
+      </div>
+      <div class="side-card-body">
+        <div class="stat-trio">
+          <div class="stat-box">
+            <div class="stat-num" id="st-hoy">0</div>
+            <div class="stat-lbl">Hoy</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="st-semana">0</div>
+            <div class="stat-lbl">Semana</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="st-mes">0</div>
+            <div class="stat-lbl">Mes</div>
+          </div>
+        </div>
+
+        <!-- Barra progreso mes -->
+        <div class="mes-progress">
+          <div class="mes-progress-hdr">
+            <span>Progreso del mes</span>
+            <span id="st-mes-pct">—</span>
+          </div>
+          <div class="mes-progress-bar-bg">
+            <div class="mes-progress-bar" id="st-mes-bar"></div>
+          </div>
+          <div class="mes-reset-info" id="st-reset-info"></div>
+        </div>
+
+        <!-- Enviados / pendientes -->
+        <div class="sync-row">
+          <div class="sync-box env">
+            <div class="sync-num" id="st-enviados">0</div>
+            <div class="sync-lbl">✅ Enviados</div>
+          </div>
+          <div class="sync-box pend">
+            <div class="sync-num" id="st-pend">0</div>
+            <div class="sync-lbl">⏳ Pendientes</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.7rem;color:var(--text-soft);margin-top:4px;">
+          Última sync: <strong id="last-sync">—</strong>
+        </div>
+        <button id="btnSyncPerm" onclick="syncPending(true)"
+          style="margin-top:10px;width:100%;padding:10px;background:var(--verde-corp);
+                 color:white;border:none;border-radius:10px;font-family:Outfit,sans-serif;
+                 font-size:0.82rem;font-weight:700;cursor:pointer;
+                 display:flex;align-items:center;justify-content:center;gap:8px;">
+          <i class="fas fa-sync-alt"></i> Sincronizar pendientes
+        </button>
+        <div id="syncStatus" style="font-size:0.72rem;text-align:center;
+             margin-top:5px;color:var(--text-soft);min-height:16px;"></div>
+      </div>
+    </div>
+
+    <!-- Visitas de hoy con estatus -->
+    <div class="side-card">
+      <div class="side-card-header">
+        <i class="fas fa-list-check"></i> Mis Visitas de Hoy
+        <span id="hoy-badge" style="margin-left:auto;background:var(--verde-corp);color:white;border-radius:10px;padding:1px 8px;font-size:0.68rem;font-weight:700;">0</span>
+      </div>
+      <div class="side-card-body" style="padding:0;">
+        <div id="visitas-hoy-list" style="max-height:260px;overflow-y:auto;padding:8px 10px;">
+          <div style="text-align:center;padding:14px;color:var(--text-soft);font-size:0.78rem;">
+            <i class="fas fa-calendar-day"></i><br>Sin registros hoy
+          </div>
+        </div>
+        <!-- Exportar solo datos básicos sin GPS -->
+        <div style="padding:8px 10px;border-top:1px solid var(--border);">
+          <button class="btn btn-outline btn-full" onclick="exportarRegistrosHoy()" style="font-size:0.75rem;padding:8px;">
+            <i class="fas fa-file-csv"></i> Exportar lista del día
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AgribrainPRO -->
+    <div class="side-card">
+      <div class="side-card-header"><i class="fas fa-brain"></i> AgribrainPRO</div>
+      <div class="side-card-body">
+        <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:10px;line-height:1.5;">
+          Plataforma de inteligencia agrícola para análisis avanzado de cultivos.
+        </p>
+        <button class="btn btn-outline btn-full" onclick="openAgribrain()" style="font-size:0.82rem;">
+          <i class="fas fa-external-link-alt"></i> Ir a AgribrainPRO
+        </button>
+      </div>
+    </div>
+
+    <!-- Pendientes de sync -->
+    <div class="side-card" id="pendingCard" style="display:none;">
+      <div class="side-card-header">
+        <i class="fas fa-clock"></i> Pendientes de Sync
+        <span id="pend-badge" style="margin-left:auto;background:var(--amarillo);color:var(--verde-deep);border-radius:10px;padding:1px 8px;font-size:0.72rem;font-weight:700;">0</span>
+      </div>
+      <div class="side-card-body">
+        <div id="pending-list" style="max-height:200px;overflow-y:auto;"></div>
+        <button class="btn btn-green btn-full" id="btnSyncAll" style="margin-top:10px;font-size:0.82rem;"
+                onclick="syncPending(true)">
+          <i class="fas fa-sync-alt"></i> Sincronizar Todo
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /side-panel -->
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <i class="fas fa-leaf" id="t-icon"></i>
+  <span id="t-msg">Mensaje</span>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="session.js"></script>
+<script>
+'use strict';
+// ─── CONFIG ──────────────────────────────────────────────────
+var SCRIPT_URL   = localStorage.getItem('prodeni_script_url') ||
+  'https://script.google.com/macros/s/AKfycbz8rv5sN5oTNQzKGrV5GnxJ6U5FtJEvvvmhMpvI5ZIZ52XZMc1eYTKdVK1oc2c2ZGZs7Q/exec';
+var AGRIBRAIN_URL = 'AGRIBRAIN_URL_AQUI';
+
+// ─── ESTADO ──────────────────────────────────────────────────
+var currentUser = null;
+var isOnline    = navigator.onLine;
+var gpsCaptura  = null;
+var gpsPredio   = null;
+var tsCaptura   = null;
+var tsPredio    = null;
+var _leafletMap    = null;
+var _leafletMarker = null;
+var _mapPointConfirmed = false;
+var _trackInterval = null;
+var _lastTrackPos  = null;
+
+// ─── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+  currentUser = ProdenSession.require();
+  if (!currentUser) return;
+
+  document.getElementById('u-ava').textContent  = currentUser.username[0].toUpperCase();
+  document.getElementById('u-name').textContent = currentUser.username;
+
+  loadBranding();
+  updateConnUI();
+  loadPending();
+  updateStats();
+  checkMonthReset();
+  captureGPSSilent();
+  initTracking();
+
+  window.addEventListener('online',  handleOnline);
+  window.addEventListener('offline', handleOffline);
+  if (isOnline) setTimeout(syncPending, 2500);
+
+  document.getElementById('formVisita').addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitForm(false);
+  });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  }
+});
+
+function loadBranding() {
+  var s = JSON.parse(localStorage.getItem('app_settings') || '{}');
+  if (s.appName) document.getElementById('h-name').textContent = s.appName;
+  if (s.appLogo) document.getElementById('h-logo').src = s.appLogo;
+}
+
+// ─── LOGOUT — onclick directo en HTML ─────────────────────────
+window.prodeniLogout = function () {
+  var pending = JSON.parse(localStorage.getItem('pendingForms') || '[]');
+  if (pending.length > 0) {
+    if (!confirm('Tienes ' + pending.length + ' visita(s) pendiente(s) sin enviar.\n¿Salir de todas formas? Se conservarán para enviar después.')) return;
+  }
+  if (_trackInterval) clearInterval(_trackInterval);
+  ProdenSession.logout();
+  window.location.href = 'index.html';
+};
+
+// ─── CONEXIÓN ─────────────────────────────────────────────────
+function handleOnline()  { isOnline = true;  updateConnUI(); setTimeout(function(){ syncPending(false); }, 1500); }
+function handleOffline() { isOnline = false; updateConnUI(); toast('Sin conexión — guardando en dispositivo', 'warn'); }
+
+function updateConnUI() {
+  var dot     = document.getElementById('conn-dot');
+  var txt     = document.getElementById('conn-txt');
+  var btnSend = document.getElementById('btnSend');
+  var btnLocal= document.getElementById('btnLocal');
+  if (isOnline) {
+    dot.className = 'conn-dot online';
+    txt.textContent = 'Online';
+    btnSend.style.display  = 'flex';
+    btnLocal.style.display = 'none';
+  } else {
+    dot.className = 'conn-dot offline';
+    txt.textContent = 'Offline';
+    btnSend.style.display  = 'none';
+    btnLocal.style.display = 'flex';
+  }
+}
+
+// ─── CULTIVO — Otro despliega campo libre ──────────────────
+window.handleCultivoChange = function (val) {
+  var otro = document.getElementById('cultivo-otro');
+  otro.style.display = val === 'Otro' ? 'block' : 'none';
+  if (val !== 'Otro') otro.value = '';
+  else setTimeout(function(){ otro.focus(); }, 50);
+};
+
+// Valor real del cultivo a enviar (Otro usa el campo libre)
+function getCultivoValue() {
+  var sel = document.getElementById('cultivo').value;
+  if (sel === 'Otro') {
+    var txt = document.getElementById('cultivo-otro').value.trim();
+    return txt || 'Otro';
+  }
+  return sel;
+}
+
+// ─── OBJETIVO ─────────────────────────────────────────────────
+window.handleObjetivoChange = function (val) {
+  var otroInput = document.getElementById('objetivo-otro');
+  var devBadge  = document.getElementById('desarrollo-badge');
+  otroInput.style.display = val === 'Otro' ? 'block' : 'none';
+  devBadge.style.display  = val === 'Propuesta de Desarrollo' ? 'block' : 'none';
+  if (val !== 'Otro') otroInput.value = '';
+  if (otroInput.style.display === 'block') setTimeout(function(){ otroInput.focus(); }, 50);
+};
+
+function getObjetivoValue() {
+  var sel = document.getElementById('objetivo').value;
+  if (sel === 'Otro') {
+    var txt = document.getElementById('objetivo-otro').value.trim();
+    return txt ? 'Otro: ' + txt : 'Otro';
+  }
+  return sel;
+}
+
+// ─── GPS ──────────────────────────────────────────────────────
+function captureGPSSilent() {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(
+    function(pos) { applyGPS(pos, false); },
+    function() {},
+    { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
+  );
+}
+
+window.captureGPS = function () {
+  if (!navigator.geolocation) { setGPSManualFallback(); return; }
+  var btn = document.getElementById('btnGps');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Capturando...';
+  showGPSProgress();
+  var progressInterval = simulateProgress();
+  var settled = false;
+
+  function done(pos, fromCache) {
+    if (settled) return;
+    settled = true;
+    clearInterval(progressInterval);
+    hideGPSProgress();
+    navigator.geolocation.clearWatch(watchId);
+    clearTimeout(fallbackTimer);
+    applyGPS(pos, true, fromCache);
+  }
+
+  function fail(err) {
+    if (settled) return;
+    // Intento 2: posición reciente (hasta 5 min) sin alta precisión
+    navigator.geolocation.getCurrentPosition(
+      function(pos) { done(pos, true); },
+      function() {
+        // Intento 3: última posición del tracker (guardada localmente)
+        var lastTrack = _lastTrackPos;
+        if (lastTrack && lastTrack.lat) {
+          var fakePos = { coords: { latitude: lastTrack.lat, longitude: lastTrack.lon,
+            accuracy: lastTrack.acc || 200 }, timestamp: new Date(lastTrack.ts).getTime() };
+          done(fakePos, true);
+        } else {
+          settled = true;
+          clearInterval(progressInterval);
+          hideGPSProgress();
+          handleGPSError(err);
+        }
+      },
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+    );
+  }
+
+  // Intento 1: GPS alta precisión (15 seg máximo)
+  var watchId = navigator.geolocation.watchPosition(
+    function(pos) {
+      if (pos.coords.accuracy <= 80) { done(pos, false); }
+      else if (!settled) { done(pos, false); } // acepta cualquiera después de 5s
+    },
+    function(err) { fail(err); },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
+  );
+
+  // Fallback automático a los 15 segundos
+  var fallbackTimer = setTimeout(function() {
+    if (!settled) fail({ code: 3, message: 'timeout' });
+  }, 15000);
+};
+
+function applyGPS(pos, showMsg, fromCache) {
+  var lat = pos.coords.latitude;
+  var lon = pos.coords.longitude;
+  var acc = pos.coords.accuracy;
+  var now = new Date().toISOString();
+  var posAge = pos.timestamp ? Math.round((Date.now() - pos.timestamp) / 1000) : 0;
+
+  if (!gpsCaptura) { gpsCaptura = { lat:lat, lon:lon, accuracy:acc, timestamp:now }; tsCaptura = now; }
+  gpsPredio = { lat:lat, lon:lon, accuracy:acc, timestamp:now };
+  tsPredio  = now;
+
+  var icon   = document.getElementById('gps-status-icon');
+  var label  = document.getElementById('gps-status-label');
+  var coords = document.getElementById('gps-status-coords');
+  var badge  = document.getElementById('gps-badge');
+  var block  = document.getElementById('gpsBlock');
+  var btn    = document.getElementById('btnGps');
+
+  var prec  = acc < 20 ? 'Alta precisión' : acc < 50 ? 'Buena precisión' : acc < 100 ? 'Aceptable' : 'Baja precisión';
+  var color = acc < 50 ? '#2E7D32' : acc < 150 ? '#F57F17' : '#B71C1C';
+  var bg    = acc < 50 ? '#E8F5E9' : acc < 150 ? '#FFF8E1' : '#FFEBEE';
+  var ageStr = fromCache && posAge > 10 ? ' · posición de hace ' + (posAge < 60 ? posAge + 's' : Math.round(posAge/60) + 'min') : '';
+
+  icon.style.background = bg;
+  icon.innerHTML = '<i class="fas fa-' + (acc < 100 ? 'check-circle' : 'exclamation-circle') + '" style="color:' + color + ';font-size:1rem;"></i>';
+  label.textContent  = 'Ubicación capturada · ' + prec + (fromCache ? ' (reciente)' : '');
+  coords.textContent = '± ' + Math.round(acc) + 'm · ' + new Date(now).toLocaleTimeString('es-MX') + ageStr;
+  badge.style.display = 'block';
+  badge.style.background = bg;
+  badge.style.color = color;
+  badge.textContent = acc < 100 ? '✓ Listo' : '⚠ Baja precisión';
+  block.classList.add('captured');
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-redo"></i> Mejorar Ubicación';
+
+  // Actualizar mapa si está inicializado
+  if (window._map && window._mapMarker) {
+    _mapMarker.setLatLng([lat, lon]);
+    _map.setView([lat, lon], 16);
+  }
+
+  if (showMsg) toast('Ubicación capturada ±' + Math.round(acc) + 'm' + (fromCache ? ' (usó GPS reciente)' : ''), acc < 150 ? 'success' : 'warn');
+}
+
+function handleGPSError(err) {
+  var btn = document.getElementById('btnGps');
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Reintentar Ubicación';
+  var label  = document.getElementById('gps-status-label');
+  var coords = document.getElementById('gps-status-coords');
+  var icon   = document.getElementById('gps-status-icon');
+  icon.style.background = '#FFF8E1';
+  icon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#F9A825;font-size:1rem;"></i>';
+  if (err.code === 1) {
+    label.textContent  = 'Permiso de ubicación denegado';
+    coords.textContent = 'Ve a Configuración → Privacidad → Ubicación → activa para este navegador';
+    toast('GPS bloqueado. Actívalo en Configuración.', 'error');
+  } else if (err.code === 2) {
+    label.textContent  = 'Sin señal GPS disponible';
+    coords.textContent = 'Sal al exterior o usa el selector de mapa.';
+    gpsPredio = { lat:null, lon:null, accuracy:null, timestamp:new Date().toISOString(), sinSenal:true };
+    toast('Sin señal GPS. Usa el mapa para marcar.', 'warn');
+  } else {
+    label.textContent  = 'GPS tardó demasiado';
+    coords.textContent = 'Intenta de nuevo al aire libre.';
+    toast('GPS tardó mucho. Intenta de nuevo.', 'warn');
+  }
+}
+
+function setGPSManualFallback() {
+  document.getElementById('gps-status-label').textContent  = 'GPS no disponible en este navegador';
+  document.getElementById('gps-status-coords').textContent = 'Usa el selector de mapa para marcar la ubicación.';
+  gpsPredio = { lat:null, lon:null, accuracy:null, timestamp:new Date().toISOString(), sinSenal:true };
+}
+
+function showGPSProgress() { document.getElementById('gps-progress-wrap').style.display = 'block'; }
+function hideGPSProgress() { document.getElementById('gps-progress-wrap').style.display = 'none'; }
+function simulateProgress() {
+  var pct = 0;
+  var bar = document.getElementById('gps-progress-bar');
+  var txt = document.getElementById('gps-progress-txt');
+  return setInterval(function() {
+    pct = Math.min(pct + (pct < 60 ? 3 : pct < 85 ? 1 : 0.3), 92);
+    bar.style.width = pct + '%';
+    if (pct > 30) txt.textContent = 'Conectando con satélites GPS...';
+    if (pct > 65) txt.textContent = 'Calculando posición exacta...';
+  }, 300);
+}
+
+// ─── MAPA LEAFLET ─────────────────────────────────────────────
+window.toggleMapPicker = function () {
+  var wrap   = document.getElementById('map-picker-wrap');
+  var isOpen = wrap.style.display !== 'none';
+  if (isOpen) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  if (!_leafletMap) {
+    var lat  = gpsPredio && gpsPredio.lat ? gpsPredio.lat : 19.5665;
+    var lon  = gpsPredio && gpsPredio.lon ? gpsPredio.lon : -101.7068;
+    var zoom = gpsPredio && gpsPredio.lat ? 15 : 9;
+    _leafletMap = L.map('map-picker', { zoomControl:true }).setView([lat, lon], zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap', maxZoom:19 }).addTo(_leafletMap);
+    if (gpsPredio && gpsPredio.lat) {
+      _leafletMarker = L.marker([lat, lon], { draggable:true }).addTo(_leafletMap)
+        .bindPopup('Ubicación actual').openPopup();
+      _leafletMarker.on('dragend', function(e) {
+        var ll = e.target.getLatLng();
+        _mapPointConfirmed = false;
+        document.getElementById('map-picker-coords').innerHTML = '📍 Lat: <strong>' + ll.lat.toFixed(6) + '</strong> · Lon: <strong>' + ll.lng.toFixed(6) + '</strong>';
+      });
+    }
+    _leafletMap.on('click', function(e) {
+      var lat2 = e.latlng.lat, lon2 = e.latlng.lng;
+      if (_leafletMarker) _leafletMarker.setLatLng([lat2, lon2]);
+      else {
+        _leafletMarker = L.marker([lat2, lon2], { draggable:true }).addTo(_leafletMap);
+        _leafletMarker.on('dragend', function(ev) {
+          var ll = ev.target.getLatLng();
+          document.getElementById('map-picker-coords').innerHTML = '📍 Lat: <strong>' + ll.lat.toFixed(6) + '</strong> · Lon: <strong>' + ll.lng.toFixed(6) + '</strong>';
+        });
+      }
+      _mapPointConfirmed = false;
+      document.getElementById('map-picker-coords').innerHTML = '📍 Lat: <strong>' + lat2.toFixed(6) + '</strong> · Lon: <strong>' + lon2.toFixed(6) + '</strong>';
+    });
+    setTimeout(function() { _leafletMap.invalidateSize(); }, 200);
+    setTimeout(function() { _leafletMap.invalidateSize(); }, 700);
+  } else {
+    setTimeout(function() { _leafletMap.invalidateSize(); }, 200);
+    setTimeout(function() { _leafletMap.invalidateSize(); }, 700);
+  }
+};
+
+window.confirmMapPoint = function () {
+  if (!_leafletMarker) { toast('Toca el mapa para seleccionar un punto', 'warn'); return; }
+  var ll  = _leafletMarker.getLatLng();
+  var now = new Date().toISOString();
+  gpsPredio = { lat:ll.lat, lon:ll.lng, accuracy:0, timestamp:now, manual:true };
+  tsPredio  = now;
+  var icon = document.getElementById('gps-status-icon');
+  icon.style.background = '#E3F2FD';
+  icon.innerHTML = '<i class="fas fa-map-pin" style="color:#1565C0;font-size:1rem;"></i>';
+  document.getElementById('gps-status-label').textContent  = 'Ubicación seleccionada manualmente en mapa';
+  document.getElementById('gps-status-coords').textContent = ll.lat.toFixed(5) + ', ' + ll.lng.toFixed(5) + ' · Punto manual';
+  var badge = document.getElementById('gps-badge');
+  badge.style.display = 'block'; badge.style.background = '#E3F2FD'; badge.style.color = '#1565C0'; badge.textContent = '📍 Manual';
+  document.getElementById('gpsBlock').classList.add('captured');
+  _mapPointConfirmed = true;
+  document.getElementById('map-picker-wrap').style.display = 'none';
+  toast('Punto del predio confirmado en mapa', 'success');
+};
+
+// ─── FORM ─────────────────────────────────────────────────────
+function buildFormData() {
+  // syncId: ID único por registro para evitar duplicados en el Sheet
+  // Formato: deviceId + timestamp → garantiza unicidad
+  var syncId = getDeviceId() + '_' + Date.now();
+  return {
+    action:       'saveData',
+    syncId:       syncId,
+    usuario:      currentUser.username,
+    cliente:      document.getElementById('cliente').value.trim(),
+    empresa:      document.getElementById('empresa').value || '',
+    predio:       document.getElementById('predio').value.trim(),
+    objetivo:     getObjetivoValue(),
+    cultivo:      getCultivoValue(),
+    etapa:        document.getElementById('etapa').value,
+    hectareas:    document.getElementById('hectareas').value,
+    productos:    document.getElementById('productos').value.trim(),
+    interes:      document.getElementById('interes').value,
+    notas:        document.getElementById('notas').value.trim(),
+    lat_captura:  gpsCaptura ? gpsCaptura.lat  : null,
+    lon_captura:  gpsCaptura ? gpsCaptura.lon  : null,
+    ts_captura:   gpsCaptura ? gpsCaptura.timestamp : null,
+    lat:          gpsPredio  ? gpsPredio.lat   : null,
+    lon:          gpsPredio  ? gpsPredio.lon   : null,
+    ts_predio:    gpsPredio  ? gpsPredio.timestamp : null,
+    gps_accuracy: gpsPredio  ? gpsPredio.accuracy : null,
+    fecha:        new Date().toISOString(),
+    timestamp:    Date.now(),
+    deviceId:     getDeviceId(),
+  };
+}
+
+function validateForm() {
+  var req = ['cliente','objetivo'];
+  for (var i = 0; i < req.length; i++) {
+    var el = document.getElementById(req[i]);
+    if (!el.value.trim()) {
+      toast('El campo "' + (el.previousElementSibling ? el.previousElementSibling.textContent.split('*')[0].trim() : req[i]) + '" es requerido', 'error');
+      el.focus();
+      return false;
+    }
+  }
+  if (!gpsPredio || (!gpsPredio.lat && !gpsPredio.sinSenal)) {
+    toast('Recomendado: captura la ubicación GPS antes de enviar', 'warn');
+  }
+  captureTrackPoint('form_submit');
+  return true;
+}
+
+window.submitForm = function (forceLocal) {
+  if (forceLocal === undefined) forceLocal = false;
+  if (!validateForm()) return;
+  var data = buildFormData();
+  if (isOnline && !forceLocal) sendToServer(data);
+  else saveLocally(data);
+};
+
+async function sendToServer(data, pendingIndex) {
+  var btn = document.getElementById('btnSend');
+  if (btn) { btn.classList.add('loading'); btn.disabled = true; }
+  try {
+    await submitToAppsScript(data);
+    if (pendingIndex !== undefined && pendingIndex !== null) {
+      removePendingAt(pendingIndex);
+    } else {
+      resetForm();
+      addToHistory(data, true);
+    }
+    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString('es-MX');
+    loadPending();
+    updateStats();
+    toast('¡Visita registrada exitosamente!', 'success');
+  } catch(err) {
+    toast('Error de red — guardando localmente', 'warn');
+    if (pendingIndex === undefined || pendingIndex === null) saveLocally(data);
+  } finally {
+    if (btn) { btn.classList.remove('loading'); btn.disabled = false; }
+  }
+}
+
+async function submitToAppsScript(data) {
+  var clean = {};
+  for (var k in data) {
+    if (data[k] !== null && data[k] !== undefined && data[k] !== '') {
+      clean[k] = String(data[k]);
+    }
+  }
+  clean.action = 'saveData';
+
+  // Apps Script GET devuelve Access-Control-Allow-Origin: *
+  // → fetch normal funciona en Chrome, Firefox y Safari
+  // Siempre GET con query string — nunca POST (POST requiere preflight CORS que Apps Script no maneja)
+  var url = SCRIPT_URL + '?' + new URLSearchParams(clean).toString();
+
+  try {
+    var res = await fetch(url, {
+      method: 'GET',
+      cache:  'no-store',
+    });
+    // Apps Script redirige — res.ok puede ser false si el redirect no se siguió
+    // pero si llegamos aquí sin excepción, el dato fue recibido
+    var json = { success: true };
+    try { json = await res.json(); } catch(e) {}
+    return json;
+  } catch(err) {
+    // Sin red
+    throw new Error('Sin conexión: ' + err.message);
+  }
+}
+
+function saveLocally(data) {
+  var pending = JSON.parse(localStorage.getItem('pendingForms') || '[]');
+  pending.push(data);
+  localStorage.setItem('pendingForms', JSON.stringify(pending));
+  addToHistory(data, false);
+  resetForm();
+  loadPending();
+  updateStats();
+  toast('Guardado en el dispositivo. Se sincronizará al recuperar señal.', 'success');
+}
+
+function resetForm() {
+  document.getElementById('formVisita').reset();
+  document.getElementById('cultivo-otro').style.display = 'none';
+  document.getElementById('cultivo-otro').value = '';
+  document.getElementById('objetivo-otro').style.display = 'none';
+  document.getElementById('objetivo-otro').value = '';
+  document.getElementById('desarrollo-badge').style.display = 'none';
+  gpsCaptura = gpsPredio = tsCaptura = tsPredio = null;
+  var icon = document.getElementById('gps-status-icon');
+  icon.style.background = '#E8F5E9';
+  icon.innerHTML = '<i class="fas fa-location-crosshairs" style="color:#2E7D32;font-size:1rem;"></i>';
+  document.getElementById('gps-status-label').textContent  = 'Ubicación no capturada';
+  document.getElementById('gps-status-coords').textContent = 'Presiona el botón para capturar';
+  document.getElementById('gps-badge').style.display = 'none';
+  document.getElementById('gpsBlock').classList.remove('captured');
+  var btn = document.getElementById('btnGps');
+  btn.disabled = false; btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Capturar GPS';
+  hideGPSProgress();
+  setTimeout(captureGPSSilent, 1500);
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+// ─── PENDIENTES ───────────────────────────────────────────────
+function loadPending() {
+  var pending = JSON.parse(localStorage.getItem('pendingForms') || '[]');
+  var card    = document.getElementById('pendingCard');
+  var list    = document.getElementById('pending-list');
+  var badge   = document.getElementById('pend-badge');
+  badge.textContent = pending.length;
+  card.style.display = pending.length > 0 ? 'block' : 'none';
+  window._pendingList = pending;
+  list.innerHTML = pending.map(function(p, i) {
+    var t = new Date(p.timestamp || Date.now()).toLocaleString('es-MX', {dateStyle:'short',timeStyle:'short'});
+    return '<div class="pending-item">' +
+      '<div><div class="pending-name">' + (p.cliente || '—') + '</div>' +
+      '<div class="pending-time">' + t + ' · ' + (p.predio || '') + '</div></div>' +
+      '<div class="pending-actions">' +
+      '<button class="btn-icon-sm btn-sync" onclick="syncItem(' + i + ')" title="Enviar"><i class="fas fa-sync"></i></button>' +
+      '<button class="btn-icon-sm btn-del"  onclick="deleteItem(' + i + ')" title="Eliminar"><i class="fas fa-trash"></i></button>' +
+      '</div></div>';
+  }).join('');
+}
+
+function removePendingAt(i) {
+  var p = JSON.parse(localStorage.getItem('pendingForms') || '[]');
+  p.splice(i, 1);
+  localStorage.setItem('pendingForms', JSON.stringify(p));
+}
+
+window.syncItem = async function (i) {
+  if (!isOnline) { toast('Sin conexión — espera a tener señal', 'warn'); return; }
+  var pending = window._pendingList || [];
+  if (!pending[i]) return;
+  try {
+    await submitToAppsScript(pending[i]);
+    removePendingAt(i);
+    // Marcar como synced en historial
+    var h = getHistory();
+    var found = h.find(function(r) { return String(r.timestamp) === String(pending[i].timestamp); });
+    if (found) { found.synced = true; localStorage.setItem('local_history', JSON.stringify(h)); }
+    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString('es-MX');
+    loadPending(); updateStats();
+    toast('Visita sincronizada ✓', 'success');
+  } catch(e) { toast('Sin conexión — intenta más tarde', 'warn'); }
+};
+
+window.deleteItem = function (i) {
+  if (!confirm('¿Eliminar este registro pendiente? No se podrá recuperar.')) return;
+  removePendingAt(i);
+  loadPending(); updateStats();
+  toast('Registro eliminado', 'info');
+};
+
+var _syncInProgress = false;  // evita llamadas simultáneas
+
+async function syncPending(manual) {
+  if (_syncInProgress) {
+    if (manual) toast('Sincronización ya en curso...', 'info');
+    return;
+  }
+  var pending = JSON.parse(localStorage.getItem('pendingForms') || '[]');
+  if (!pending.length) {
+    if (manual) toast('No hay registros pendientes', 'info');
+    return;
+  }
+  if (!isOnline) {
+    if (manual) toast('Sin conexión — los registros se enviarán al reconectar', 'warn');
+    return;
+  }
+
+  _syncInProgress = true;
+  var btnSync = document.getElementById('btnSyncAll');
+  if (btnSync) { btnSync.disabled = true; btnSync.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...'; }
+  if (manual) toast('Enviando ' + pending.length + ' registro(s)...', 'info');
+
+  var ok = 0, fail = 0;
+  // Procesar de más antiguo a más nuevo (índice 0 primero)
+  for (var i = 0; i < pending.length; i++) {
+    var item = pending[i];
+    try {
+      var resp = await submitToAppsScript(item);
+      if (resp === true || resp.success !== false) {
+        // Marcar como enviado en historial
+        var h = getHistory();
+        var found = h.find(function(r) {
+          return String(r.syncId) === String(item.syncId) ||
+                 String(r.timestamp) === String(item.timestamp);
+        });
+        if (found) { found.synced = true; found._estado = 'enviada'; }
+        localStorage.setItem('local_history', JSON.stringify(h));
+        ok++;
+        // Remover de pendientes (actualizar lista en cada ciclo)
+        var pArr = JSON.parse(localStorage.getItem('pendingForms') || '[]');
+        pArr = pArr.filter(function(x) {
+          return String(x.syncId || x.timestamp) !== String(item.syncId || item.timestamp);
+        });
+        localStorage.setItem('pendingForms', JSON.stringify(pArr));
+      } else {
+        fail++;
+      }
+    } catch(e) {
+      fail++;
+    }
+  }
+
+  _syncInProgress = false;
+  if (btnSync) { btnSync.disabled = false; btnSync.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar Todo'; }
+  loadPending(); updateStats();
+  document.getElementById('last-sync').textContent = new Date().toLocaleTimeString('es-MX');
+  if (ok > 0 && fail === 0) toast(ok + ' registro(s) enviado(s) ✓', 'success');
+  else if (ok > 0 && fail > 0) toast(ok + ' enviados, ' + fail + ' fallaron — reintenta', 'warn');
+  else if (fail > 0) toast('Error al enviar. Intenta de nuevo.', 'error');
+}
+
+// ─── HISTORIAL ────────────────────────────────────────────────
+function addToHistory(data, synced) {
+  var h = getHistory();
+  h.push(Object.assign({}, data, { synced:synced, fecha:data.fecha || new Date().toISOString() }));
+  if (h.length > 200) h.splice(0, h.length - 200);
+  localStorage.setItem('local_history', JSON.stringify(h));
+}
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('local_history') || '[]'); } catch(e) { return []; }
+}
+
+// ─── STATS ────────────────────────────────────────────────────
+function updateStats() {
+  var h       = getHistory();
+  var now     = new Date();
+  var todayStr = now.toDateString();
+  var dow      = (now.getDay() + 6) % 7;
+  var lunes    = new Date(now); lunes.setDate(now.getDate() - dow); lunes.setHours(0,0,0,0);
+  var mesStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  var usuario  = currentUser ? currentUser.username : '';
+  var mine     = h.filter(function(r) { return !usuario || r.usuario === usuario; });
+
+  var hoy    = mine.filter(function(r) { return new Date(r.fecha || r.timestamp).toDateString() === todayStr; });
+  var semana = mine.filter(function(r) { return new Date(r.fecha || r.timestamp) >= lunes; });
+  var mes    = mine.filter(function(r) { return new Date(r.fecha || r.timestamp) >= mesStart; });
+
+  var pendientes = JSON.parse(localStorage.getItem('pendingForms') || '[]').length;
+  var enviados   = mes.filter(function(r) { return r.synced; }).length;
+
+  document.getElementById('st-hoy').textContent      = hoy.length;
+  document.getElementById('st-semana').textContent   = semana.length;
+  document.getElementById('st-mes').textContent      = mes.length;
+  document.getElementById('st-pend').textContent     = pendientes;
+  document.getElementById('st-enviados').textContent = enviados;
+
+  var diasDelMes = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  var diasPasados = now.getDate();
+  document.getElementById('st-mes-bar').style.width = Math.min(100, Math.round((mes.length / Math.max(diasPasados,1)) * 100 * 0.5)) + '%';
+  document.getElementById('st-mes-pct').textContent = mes.length + ' visitas';
+  var diasRestantes = diasDelMes - diasPasados;
+  document.getElementById('st-reset-info').textContent = diasRestantes > 0
+    ? 'Contador se reinicia en ' + diasRestantes + ' día' + (diasRestantes !== 1 ? 's' : '')
+    : 'Reinicio del contador hoy al finalizar el día';
+
+  renderVisitasHoy(hoy, pendientes);
+}
+
+function renderVisitasHoy(hoy) {
+  var list  = document.getElementById('visitas-hoy-list');
+  var badge = document.getElementById('hoy-badge');
+  if (badge) badge.textContent = hoy.length;
+  if (!hoy.length) {
+    list.innerHTML = '<div style="text-align:center;padding:14px;color:var(--text-soft);font-size:0.78rem;"><i class="fas fa-calendar-day"></i><br>Sin registros hoy</div>';
+    return;
+  }
+  list.innerHTML = hoy.slice().reverse().map(function(r, i) {
+    var hora   = new Date(r.fecha || r.timestamp).toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'});
+    var synced = r.synced;
+    return '<div class="visit-item ' + (synced ? 'enviada' : 'pendiente') + '">' +
+      '<div class="visit-item-top">' +
+        '<span class="visit-item-name">' + (r.cliente || '—') + '</span>' +
+        '<span class="visit-item-badge ' + (synced ? 'env' : 'pend') + '">' + (synced ? '✅ Enviada' : '⏳ Pendiente') + '</span>' +
+      '</div>' +
+      '<div class="visit-item-meta">' + (r.predio || '—') + ' · ' + hora + ' · ' + (r.objetivo || '—') + '</div>' +
+      (!synced ? '<button onclick="retrySend(' + i + ')" style="margin-top:5px;width:100%;background:var(--verde-corp);color:white;border:none;border-radius:6px;padding:5px;font-size:0.72rem;cursor:pointer;font-weight:700;"><i class="fas fa-sync-alt"></i> Enviar ahora</button>' : '') +
+    '</div>';
+  }).join('');
+}
+
+window.retrySend = async function (idx) {
+  if (!isOnline) { toast('Sin conexión — espera a tener señal', 'warn'); return; }
+  var h   = getHistory();
+  var now = new Date().toDateString();
+  var hoy = h.filter(function(r) { return new Date(r.fecha || r.timestamp).toDateString() === now; }).reverse();
+  var item = hoy[idx];
+  if (!item) return;
+  try {
+    await submitToAppsScript(item);
+    var all = getHistory();
+    var found = all.find(function(r) { return String(r.timestamp||r.fecha) === String(item.timestamp||item.fecha) && r.cliente === item.cliente; });
+    if (found) { found.synced = true; localStorage.setItem('local_history', JSON.stringify(all)); }
+    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString('es-MX');
+    updateStats(); toast('Registro enviado correctamente ✓', 'success');
+  } catch(e) { toast('Sin conexión, intenta más tarde', 'warn'); }
+};
+
+// ─── REINICIO DE MES ──────────────────────────────────────────
+function checkMonthReset() {
+  var now       = new Date();
+  var lastKey   = 'prodeni_last_month_check';
+  var thisMonth = now.getFullYear() + '-' + (now.getMonth() + 1);
+  var lastCheck = localStorage.getItem(lastKey);
+  if (lastCheck && lastCheck !== thisMonth && now.getDate() === 1) {
+    var h       = getHistory();
+    var mesActual = new Date(now.getFullYear(), now.getMonth(), 1);
+    var historico = h.filter(function(r) { return new Date(r.fecha || r.timestamp) < mesActual; });
+    var actual    = h.filter(function(r) { return new Date(r.fecha || r.timestamp) >= mesActual; });
+    var arch = JSON.parse(localStorage.getItem('prodeni_history_archive') || '[]');
+    arch.push.apply(arch, historico);
+    if (arch.length > 500) arch.splice(0, arch.length - 500);
+    localStorage.setItem('prodeni_history_archive', JSON.stringify(arch));
+    localStorage.setItem('local_history', JSON.stringify(actual));
+  }
+  localStorage.setItem(lastKey, thisMonth);
+}
+
+// ─── EXPORTAR DÍA ────────────────────────────────────────────
+window.exportarRegistrosHoy = function () {
+  var usuario = currentUser ? currentUser.username : '';
+  var todayStr = new Date().toDateString();
+  var h = getHistory();
+  var hoy = h.filter(function(r) { return new Date(r.fecha || r.timestamp).toDateString() === todayStr && (!usuario || r.usuario === usuario); });
+  var pending = JSON.parse(localStorage.getItem('pendingForms') || '[]');
+
+  var todas = hoy.map(function(r) { return Object.assign({}, r, { _estado: r.synced ? 'Enviada' : 'Pendiente' }); });
+  pending.forEach(function(p) {
+    if (new Date(p.timestamp || Date.now()).toDateString() === todayStr)
+      todas.push(Object.assign({}, p, { _estado: 'Pendiente' }));
+  });
+
+  if (!todas.length) { toast('No hay registros hoy para exportar', 'warn'); return; }
+
+  var fecha = new Date().toLocaleDateString('es-MX');
+  // Solo datos básicos — sin GPS
+  var csv = 'Hora,Productor,Predio,Objetivo,Cultivo,Etapa,Estado\n';
+  todas.forEach(function(r) {
+    var hora = new Date(r.fecha || r.timestamp || Date.now()).toLocaleTimeString('es-MX', {hour:'2-digit',minute:'2-digit'});
+    csv += '"' + hora + '","' + (r.cliente||'') + '","' + (r.predio||'') + '","' + (r.objetivo||'') + '","' + (r.cultivo||'') + '","' + (r.etapa||'') + '","' + r._estado + '"\n';
+  });
+
+  var blob = new Blob(['\uFEFF' + csv], { type:'text/csv;charset=utf-8;' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'PRODENI_' + usuario + '_' + fecha.replace(/\//g,'-') + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Lista del día exportada ✅', 'success');
+};
+
+// ─── RASTREO PASIVO ───────────────────────────────────────────
+function initTracking() {
+  if (!navigator.geolocation) return;
+  captureTrackPoint('session_start');
+  _trackInterval = setInterval(function() { captureTrackPoint('interval'); }, 5 * 60 * 1000);
+  document.addEventListener('visibilitychange', function() {
+    captureTrackPoint(document.hidden ? 'app_hidden' : 'app_visible');
+  });
+}
+
+function captureTrackPoint(event) {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      var point = { lat:pos.coords.latitude, lon:pos.coords.longitude, acc:Math.round(pos.coords.accuracy), ts:new Date().toISOString(), event:event, usuario:currentUser?currentUser.username:'', deviceId:getDeviceId() };
+      saveTrackPoint(point);
+      _lastTrackPos = point;
+      if (!gpsCaptura && event === 'session_start') { gpsCaptura = { lat:point.lat, lon:point.lon, accuracy:point.acc, timestamp:point.ts }; tsCaptura = point.ts; }
+    },
+    function() {
+      var point = { lat:null, lon:null, acc:null, ts:new Date().toISOString(), event:event+'_no_gps', usuario:currentUser?currentUser.username:'', deviceId:getDeviceId() };
+      saveTrackPoint(point);
+    },
+    { enableHighAccuracy:false, timeout:10000, maximumAge:60000 }
+  );
+}
+
+function saveTrackPoint(point) {
+  try {
+    var key   = 'prodeni_track_' + new Date().toISOString().slice(0,10);
+    var track = JSON.parse(localStorage.getItem(key) || '[]');
+    track.push(point);
+    if (track.length > 300) track.splice(0, track.length - 300);
+    localStorage.setItem(key, JSON.stringify(track));
+    if (isOnline) {
+      fetch(SCRIPT_URL + '?action=saveTrack&' + new URLSearchParams({
+        lat:point.lat||'', lon:point.lon||'', acc:point.acc||'',
+        ts:point.ts, event:point.event, usuario:point.usuario, device:point.deviceId,
+      }).toString(), { method:'GET', mode:'no-cors' }).catch(function(){});
+    }
+  } catch(e) {}
+}
+
+// ─── AGRIBRAIN ────────────────────────────────────────────────
+window.openAgribrain = function () {
+  if (!AGRIBRAIN_URL || AGRIBRAIN_URL.includes('AGRIBRAIN_URL_AQUI')) {
+    toast('URL de AgribrainPRO no configurada. Próximamente disponible.', 'info');
+    return;
+  }
+  window.open(AGRIBRAIN_URL, '_blank');
+};
+
+// ─── DEVICE ID ────────────────────────────────────────────────
+function getDeviceId() {
+  var id = localStorage.getItem('device_id');
+  if (!id) { id = 'DEV-' + Math.random().toString(36).substr(2,9).toUpperCase(); localStorage.setItem('device_id', id); }
+  return id;
+}
+
+// ─── TOAST ────────────────────────────────────────────────────
+function toast(msg, type) {
+  if (!type) type = 'info';
+  var el  = document.getElementById('toast');
+  var ico = document.getElementById('t-icon');
+  document.getElementById('t-msg').textContent = msg;
+  var map = { success:{cls:'t-success',ico:'fas fa-check-circle'}, error:{cls:'t-error',ico:'fas fa-times-circle'}, warn:{cls:'t-warn',ico:'fas fa-exclamation-triangle'}, info:{cls:'t-info',ico:'fas fa-leaf'} };
+  var t = map[type] || map.info;
+  el.className = 'toast show ' + t.cls;
+  ico.className = t.ico;
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.classList.remove('show'); }, 3500);
+}
+
+// ─── PWA banner ───────────────────────────────────────────────
+var _deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault(); _deferredPrompt = e;
+  if (!localStorage.getItem('prodeni_pwa_done') && !window.matchMedia('(display-mode: standalone)').matches) {
+    setTimeout(function() {
+      var b = document.createElement('div');
+      b.id = 'install-banner';
+      b.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#2E7D32;color:white;padding:12px 18px;border-radius:12px;font-family:Outfit,sans-serif;font-size:0.85rem;font-weight:600;display:flex;align-items:center;gap:10px;z-index:9998;box-shadow:0 8px 24px rgba(0,0,0,0.3);max-width:320px;width:90%;';
+      b.innerHTML = '<span style="flex:1">🌿 Instala PRODENI en tu dispositivo</span><button onclick="installPWA()" style="background:#F9A825;color:#1B5E20;border:none;padding:6px 12px;border-radius:8px;font-family:Outfit,sans-serif;font-weight:700;cursor:pointer;font-size:0.8rem;">Instalar</button><button onclick="this.parentElement.remove()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0 4px;">✕</button>';
+      document.body.appendChild(b);
+      setTimeout(function() { b.remove(); }, 15000);
+    }, 4000);
+  }
+});
+window.addEventListener('appinstalled', function() { localStorage.setItem('prodeni_pwa_done','1'); });
+window.installPWA = function() {
+  if (!_deferredPrompt) return;
+  _deferredPrompt.prompt();
+  _deferredPrompt.userChoice.then(function(r) {
+    if (r.outcome === 'accepted') { localStorage.setItem('prodeni_pwa_done','1'); toast('¡PRODENI instalada! 🎉','success'); }
+    _deferredPrompt = null;
+    document.getElementById('install-banner')?.remove();
+  });
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRODENI — Desarrollos</title>
+  <!-- PostHog Analytics -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u="posthog";for(void 0!==a&&(u=a),e[u]=function(){var t=function(){var t,e,o={};return t=Array.prototype.slice.call(arguments,0),(e=Object.assign({},t.shift())).distinct_id=e.distinct_id||e.uuid,t.unshift(e),t}();return e[u].push(t),t},e[u].people=e[u].people||[],e[u].toString=function(t){var e="posthog";return"posthog"!==u&&(e+="."+u),t||(e+=" (stub)"),e},e[u].people.toString=function(){return e[u].toString(1)+".people (stub)"},o="init Ie Ts Ms Ee Es Rs capture De calculateEventProperties Os register register_once register_for_session unregister unregister_for_session js getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags getPersonProperties setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Ds $s createPersonProfile Ls Fs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ps debug Is getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(e[u],o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_CJ3WV8q4dTBCiMN3z9apBwYcSUdRtDqzBTJoBjFoV3Ws', {
+      api_host: 'https://us.i.posthog.com',
+      defaults: '2025-05-24'
+    });
+    posthog.register({ app: 'visitas' });
+  </script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2E7D32">
+  <link rel="apple-touch-icon" href="Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --verde-deep:#1B5E20; --verde-corp:#2E7D32; --verde-mid:#388E3C;
+      --verde-light:#66BB6A; --verde-pale:#E8F5E9;
+      --amarillo:#F9A825; --rojo:#C62828; --azul:#1565C0;
+      --bg:#F0F4F0; --border:#D8E8D8; --text:#1A2E1A; --text-soft:#5A7A5A;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* HEADER */
+    .header { background:linear-gradient(135deg,var(--verde-corp),var(--verde-deep)); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 16px rgba(0,0,0,0.2); position:sticky; top:0; z-index:100; }
+    .header-brand { display:flex; align-items:center; gap:10px; }
+    .header-logo { width:36px; height:36px; border-radius:8px; background:white; padding:3px; object-fit:contain; }
+    .header-name { font-size:1rem; font-weight:800; color:white; letter-spacing:1.5px; line-height:1.1; }
+    .header-slogan { font-size:0.6rem; font-weight:400; color:rgba(255,255,255,0.75); letter-spacing:1px; text-transform:uppercase; display:block; margin-top:1px; }
+    .header-right { display:flex; align-items:center; gap:8px; }
+    .conn-badge { display:flex; align-items:center; gap:5px; padding:5px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; background:rgba(255,255,255,0.15); color:white; }
+    .conn-dot { width:7px; height:7px; border-radius:50%; }
+    .conn-dot.online { background:#A5D6A7; animation:pulse 2s infinite; }
+    .conn-dot.offline { background:#EF9A9A; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .user-chip { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.12); border-radius:20px; padding:5px 10px; }
+    .user-ava { width:27px; height:27px; border-radius:50%; background:var(--amarillo); color:var(--verde-deep); font-weight:800; font-size:0.82rem; display:flex; align-items:center; justify-content:center; }
+    .user-chip-name { font-size:0.82rem; color:white; font-weight:600; }
+    .btn-exit { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:white; padding:7px 12px; border-radius:8px; font-family:inherit; font-size:0.8rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; }
+    .btn-exit:hover { background:rgba(255,255,255,0.25); }
+    @media(max-width:480px) { .user-chip-name, .conn-badge span:not(.conn-dot) { display:none; } .header-right { gap:5px; } }
+
+    /* TOOLBAR */
+    .toolbar { padding:14px 20px; background:white; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+    .toolbar-search { padding:8px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:0.85rem; background:var(--bg); outline:none; min-width:240px; }
+    .toolbar-search:focus { border-color:var(--verde-mid); background:white; }
+    .toolbar-right { display:flex; gap:12px; align-items:center; }
+
+    /* LIST */
+    .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; padding:20px; }
+    .dev-card { background:white; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.06); border-left:4px solid var(--verde-corp); cursor:pointer; transition:transform 0.15s, box-shadow 0.15s; }
+    .dev-card:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.1); }
+    .dev-card-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; }
+    .dev-card-cliente { font-size:0.95rem; font-weight:800; color:var(--verde-deep); flex:1; }
+    .dev-card-meta { font-size:0.78rem; color:var(--text-soft); margin-top:4px; }
+
+    .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; }
+    .badge.propuesto { background:#FFF3E0; color:#E65100; }
+    .badge.en_seguimiento { background:#E3F2FD; color:var(--azul); }
+    .badge.logrado { background:#E8F5E9; color:var(--verde-deep); }
+    .badge.fallido { background:#FFEBEE; color:var(--rojo); }
+    .badge.pausado { background:#F5F5F5; color:var(--text-soft); }
+
+    /* DETAIL VIEW */
+    .detail-view { display:none; padding:20px; max-width:900px; margin:0 auto; width:100%; }
+    .detail-view.active { display:block; }
+    .list-view.hidden { display:none; }
+    .detail-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+    .btn-back { background:white; border:1.5px solid var(--border); border-radius:10px; padding:8px 14px; cursor:pointer; font-family:inherit; font-size:0.85rem; font-weight:600; color:var(--text-soft); display:flex; align-items:center; gap:6px; }
+    .btn-back:hover { background:var(--verde-pale); color:var(--verde-corp); border-color:var(--verde-corp); }
+
+    .detail-card { background:white; border-radius:16px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,0.06); margin-bottom:14px; }
+    .detail-card h3 { font-size:0.78rem; font-weight:800; color:var(--verde-deep); margin-bottom:14px; display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:1px; }
+
+    .fp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .fp-full { grid-column:1/-1; }
+    .fp-label { font-size:0.7rem; font-weight:700; color:var(--verde-corp); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:5px; }
+    .fp-input, .fp-select, .fp-textarea { width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.88rem; background:var(--bg); outline:none; color:var(--text); }
+    .fp-input:focus, .fp-select:focus, .fp-textarea:focus { border-color:var(--verde-mid); background:white; box-shadow:0 0 0 3px rgba(56,142,60,0.1); }
+    .fp-textarea { resize:vertical; min-height:60px; }
+    .fp-readonly { background:#F8FBF8; color:var(--text-soft); }
+
+    /* PROGRESS */
+    .progress-wrap { margin-top:10px; }
+    .progress-bar-bg { height:8px; background:#E8F5E9; border-radius:4px; overflow:hidden; }
+    .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--verde-mid),var(--verde-corp)); border-radius:4px; transition:width 0.4s; }
+    .progress-label { display:flex; justify-content:space-between; font-size:0.78rem; color:var(--text-soft); margin-top:6px; }
+
+    /* BITÁCORA */
+    .apl-list { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+    .apl-item { background:#F8FBF8; border-radius:10px; padding:12px 14px; border-left:3px solid var(--verde-light); }
+    .apl-item.pendiente { border-left-color:var(--amarillo); background:#FFF8E1; }
+    .apl-item.descartada { border-left-color:var(--rojo); background:#FFEBEE; opacity:0.7; }
+    .apl-item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:8px; }
+    .apl-item-num { font-size:0.82rem; font-weight:800; color:var(--verde-deep); }
+    .apl-item-meta { font-size:0.72rem; color:var(--text-soft); }
+    .apl-item-body { font-size:0.82rem; color:var(--text); }
+
+    /* BOTONES */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 18px; border:none; border-radius:10px; font-family:inherit; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.15s; }
+    .btn:disabled { opacity:0.6; cursor:not-allowed; }
+    .btn-green { background:linear-gradient(135deg,var(--verde-mid),var(--verde-corp)); color:white; box-shadow:0 4px 14px rgba(46,125,50,0.3); }
+    .btn-green:hover:not(:disabled) { transform:translateY(-1px); }
+    .btn-secondary { background:white; border:1.5px solid var(--border); color:var(--text-soft); }
+    .btn-secondary:hover { border-color:var(--verde-corp); color:var(--verde-corp); }
+    .btn-small { padding:6px 14px; font-size:0.78rem; }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(60px); background:#1A2E1A; color:white; padding:11px 18px; border-radius:10px; font-size:0.84rem; font-weight:600; z-index:9999; box-shadow:0 6px 20px rgba(0,0,0,0.3); transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width:90vw; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    .toast.success { background:var(--verde-corp); }
+    .toast.error { background:var(--rojo); }
+    .toast.warn { background:#E65100; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align:center; padding:60px 20px; color:var(--text-soft); }
+    .empty-state i { font-size:3rem; color:var(--verde-light); margin-bottom:14px; display:block; }
+    .empty-state p { font-size:0.95rem; }
+    .empty-state .small { font-size:0.8rem; margin-top:6px; opacity:0.7; }
+
+    @media(max-width:768px) {
+      .fp-grid { grid-template-columns:1fr; }
+      .fp-full { grid-column:1; }
+      .toolbar-search { min-width:0; flex:1; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <img src="Logo.png" class="header-logo" alt="PRODENI" onerror="this.style.display='none'">
+    <div>
+      <div class="header-name">PRODENI</div>
+      <small class="header-slogan">Desarrollos de Campo</small>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="conn-badge">
+      <span class="conn-dot" id="connDot"></span>
+      <span id="connTxt">Verificando</span>
+    </div>
+    <div class="user-chip">
+      <div class="user-ava" id="userAva">U</div>
+      <span class="user-chip-name" id="userName">Usuario</span>
+    </div>
+    <button class="btn-exit" onclick="goHome()">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+  </div>
+</header>
+
+<section id="list-view">
+  <div class="toolbar">
+    <input type="search" class="toolbar-search" id="searchInput" placeholder="Buscar por cliente, predio o cultivo..." oninput="filterAndRender()">
+    <div class="toolbar-right">
+      <label id="adminToggleWrap" style="display:none;font-size:0.82rem;color:var(--text-soft);align-items:center;gap:5px;">
+        <input type="checkbox" id="adminToggle" onchange="loadDesarrollos()" checked> Ver todos
+      </label>
+      <span style="font-size:0.78rem;color:var(--text-soft);" id="countLabel">0 desarrollos</span>
+    </div>
+  </div>
+  <div class="cards-grid" id="cardsGrid">
+    <div class="empty-state" style="grid-column:1/-1;">
+      <i class="fas fa-leaf"></i>
+      <p>Cargando desarrollos...</p>
+    </div>
+  </div>
+</section>
+
+<section id="detail-view" class="detail-view">
+  <div class="detail-header">
+    <button class="btn-back" onclick="closeDetail()"><i class="fas fa-arrow-left"></i> Atrás</button>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:0.68rem;color:var(--text-soft);text-transform:uppercase;letter-spacing:1px;">Desarrollo</div>
+      <h2 id="detailTitle" style="font-size:1.05rem;color:var(--verde-deep);font-weight:800;">—</h2>
+    </div>
+    <span class="badge" id="detailEstatus">—</span>
+  </div>
+
+  <div class="detail-card">
+    <h3><i class="fas fa-leaf"></i> Información de la propuesta</h3>
+    <div class="fp-grid">
+      <div><label class="fp-label">Cliente</label><input type="text" id="f_cliente" class="fp-input fp-readonly" readonly></div>
+      <div><label class="fp-label">Predio</label><input type="text" id="f_predio" class="fp-input fp-readonly" readonly></div>
+      <div><label class="fp-label">Cultivo</label><input type="text" id="f_cultivo" class="fp-input fp-readonly" readonly></div>
+      <div><label class="fp-label">Variedad</label><input type="text" id="f_variedad" class="fp-input" placeholder="Opcional"></div>
+      <div><label class="fp-label">Hectáreas</label><input type="number" id="f_hectareas" class="fp-input" step="0.01"></div>
+      <div><label class="fp-label">Etapa fenológica</label><input type="text" id="f_etapa" class="fp-input"></div>
+    </div>
+  </div>
+
+  <div class="detail-card">
+    <h3><i class="fas fa-stethoscope"></i> Diagnóstico y objetivo</h3>
+    <div class="fp-grid">
+      <div class="fp-full"><label class="fp-label">Problema detectado</label><textarea id="f_problema" class="fp-textarea" placeholder="Descripción del problema..."></textarea></div>
+      <div><label class="fp-label">Nombre científico</label><input type="text" id="f_nombre_cientifico" class="fp-input" placeholder="Si aplica"></div>
+      <div><label class="fp-label">N° aplicaciones planeadas</label><input type="number" id="f_num_aplicaciones" class="fp-input" min="1" max="20"></div>
+      <div class="fp-full"><label class="fp-label">Objetivo del desarrollo</label><textarea id="f_objetivo" class="fp-textarea" placeholder="Qué se busca demostrar / lograr..."></textarea></div>
+    </div>
+  </div>
+
+  <div class="detail-card">
+    <h3><i class="fas fa-chart-line"></i> Estado y progreso</h3>
+    <div class="fp-grid">
+      <div>
+        <label class="fp-label">Estatus</label>
+        <select id="f_estatus" class="fp-select" onchange="onEstatusChange()">
+          <option value="propuesto">Propuesto</option>
+          <option value="en_seguimiento">En seguimiento</option>
+          <option value="logrado">Logrado</option>
+          <option value="fallido">Fallido</option>
+          <option value="pausado">Pausado</option>
+        </select>
+      </div>
+      <div id="motivoFalloWrap" style="display:none;">
+        <label class="fp-label">Motivo del fallo</label>
+        <select id="f_motivo_fallo" class="fp-select">
+          <option value="">Selecciona...</option>
+          <option value="clima">Clima</option>
+          <option value="decision_cliente">Decisión del cliente</option>
+          <option value="mala_efectividad">Mala efectividad</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <label class="fp-label">Progreso</label>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
+      <div class="progress-label">
+        <span id="progressText">0 / 0 aplicaciones</span>
+        <strong id="progressPct">0%</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-card">
+    <h3><i class="fas fa-vial"></i> Bitácora de aplicaciones</h3>
+    <div id="aplList" class="apl-list"></div>
+    <button class="btn btn-secondary btn-small" onclick="showAplForm()"><i class="fas fa-plus"></i> Agregar aplicación</button>
+    <div id="aplForm" style="display:none;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);">
+      <div class="fp-grid">
+        <div><label class="fp-label">N°</label><input type="number" id="apl_numero" class="fp-input" min="1"></div>
+        <div><label class="fp-label">Estatus</label>
+          <select id="apl_estatus" class="fp-select">
+            <option value="pendiente">Pendiente</option>
+            <option value="aplicada">Aplicada</option>
+            <option value="descartada">Descartada</option>
+          </select>
+        </div>
+        <div><label class="fp-label">Fecha programada</label><input type="date" id="apl_fecha_programada" class="fp-input"></div>
+        <div><label class="fp-label">Fecha aplicada</label><input type="date" id="apl_fecha_aplicacion" class="fp-input"></div>
+        <div class="fp-full"><label class="fp-label">Productos (con dosis)</label><textarea id="apl_productos" class="fp-textarea" placeholder="Ej: Max Asencia 2 L/ha + Adherente 50 ml/ha"></textarea></div>
+        <div><label class="fp-label">Modo</label>
+          <select id="apl_modo" class="fp-select">
+            <option value="">Selecciona...</option>
+            <option value="foliar">Foliar</option>
+            <option value="drench">Drench</option>
+            <option value="aspersion">Aspersión</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div><label class="fp-label">Equipo</label><input type="text" id="apl_equipo" class="fp-input" placeholder="Mochila, aspersora..."></div>
+        <div><label class="fp-label">Vol. agua (L/ha)</label><input type="number" id="apl_volumen" class="fp-input" step="0.1"></div>
+        <div><label class="fp-label">pH mezcla</label><input type="number" id="apl_ph" class="fp-input" step="0.1" min="0" max="14"></div>
+        <div><label class="fp-label">CE mezcla</label><input type="number" id="apl_ce" class="fp-input" step="0.1"></div>
+        <div><label class="fp-label">Temperatura (°C)</label><input type="number" id="apl_temp" class="fp-input" step="0.1"></div>
+        <div><label class="fp-label">Humedad (%)</label><input type="number" id="apl_humedad" class="fp-input" step="0.1"></div>
+        <div class="fp-full"><label class="fp-label">Clima post-aplicación</label><input type="text" id="apl_clima_post" class="fp-input" placeholder="Ej: Lluvia 3 hrs después"></div>
+        <div class="fp-full"><label class="fp-label">Resultado observado</label><textarea id="apl_resultado" class="fp-textarea" placeholder="Qué se vio en la siguiente revisión..."></textarea></div>
+        <div class="fp-full"><label class="fp-label">Notas</label><textarea id="apl_notas" class="fp-textarea"></textarea></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button class="btn btn-green btn-small" onclick="saveAplicacion()" id="btnAplSave"><i class="fas fa-save"></i> Guardar aplicación</button>
+        <button class="btn btn-secondary btn-small" onclick="hideAplForm()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-card">
+    <h3><i class="fas fa-flag-checkered"></i> Cierre del desarrollo</h3>
+    <div class="fp-grid">
+      <div class="fp-full"><label class="fp-label">Testimonio del productor</label><textarea id="f_testimonio" class="fp-textarea" placeholder="Lo que el productor dijo del resultado..."></textarea></div>
+    </div>
+    <p style="font-size:0.72rem;color:var(--text-soft);margin-top:10px;"><i class="fas fa-info-circle"></i> Firma digital y fotos: vienen en una siguiente fase.</p>
+  </div>
+
+  <div style="display:flex;gap:8px;justify-content:flex-end;padding-bottom:30px;">
+    <button class="btn btn-secondary" onclick="closeDetail()">Cancelar</button>
+    <button class="btn btn-green" onclick="saveDesarrollo()" id="btnSaveDev"><i class="fas fa-save"></i> Guardar cambios</button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script src="session.js"></script>
+<script>
+'use strict';
+
+var SCRIPT_URL = localStorage.getItem('prodeni_script_url') ||
+  'https://script.google.com/macros/s/AKfycbz8rv5sN5oTNQzKGrV5GnxJ6U5FtJEvvvmhMpvI5ZIZ52XZMc1eYTKdVK1oc2c2ZGZs7Q/exec';
+
+var currentUser = null;
+var allDesarrollos = [];
+var currentDesarrollo = null;
+var aplicacionesActuales = [];
+
+document.addEventListener('DOMContentLoaded', function () {
+  currentUser = ProdenSession.require();
+  if (!currentUser) return;
+  document.getElementById('userAva').textContent = (currentUser.username || '?')[0].toUpperCase();
+  document.getElementById('userName').textContent = currentUser.username;
+  if (currentUser.role === 'admin') {
+    document.getElementById('adminToggleWrap').style.display = 'inline-flex';
+  }
+  updateConnUI();
+  window.addEventListener('online', updateConnUI);
+  window.addEventListener('offline', updateConnUI);
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  }
+  loadDesarrollos();
+});
+
+function updateConnUI() {
+  var online = navigator.onLine;
+  document.getElementById('connDot').className = 'conn-dot ' + (online ? 'online' : 'offline');
+  document.getElementById('connTxt').textContent = online ? 'Conectado' : 'Sin conexión';
+}
+
+window.goHome = function () {
+  window.location.href = currentUser.role === 'admin' ? 'admin.html' : 'tecnico.html';
+};
+
+async function fetchGS(params) {
+  var url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
+  var res = await fetch(url, { cache: 'no-store' });
+  return res.json();
+}
+
+async function loadDesarrollos() {
+  var grid = document.getElementById('cardsGrid');
+  grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-leaf"></i><p>Cargando desarrollos...</p></div>';
+  var params = { action: 'getDesarrollos' };
+  var verTodos = currentUser.role === 'admin' && document.getElementById('adminToggle').checked;
+  if (verTodos) params.todos = 'true';
+  else params.usuario = currentUser.username;
+  try {
+    var data = await fetchGS(params);
+    if (data.success) {
+      allDesarrollos = data.desarrollos || [];
+      filterAndRender();
+    } else {
+      throw new Error(data.message || 'Error al cargar');
+    }
+  } catch (e) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-exclamation-triangle" style="color:var(--rojo);"></i><p>No se pudieron cargar los desarrollos</p><p class="small">' + esc(e.message) + '</p></div>';
+  }
+}
+
+window.filterAndRender = function () {
+  var q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  var filtered = allDesarrollos.filter(function (d) {
+    if (!q) return true;
+    return (String(d.cliente || '').toLowerCase().indexOf(q) >= 0) ||
+           (String(d.predio || '').toLowerCase().indexOf(q) >= 0) ||
+           (String(d.cultivo || '').toLowerCase().indexOf(q) >= 0);
+  });
+  renderCards(filtered);
+};
+
+function renderCards(rows) {
+  var grid = document.getElementById('cardsGrid');
+  document.getElementById('countLabel').textContent = rows.length + (rows.length === 1 ? ' desarrollo' : ' desarrollos');
+  if (!rows.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-seedling"></i><p>Sin desarrollos todavía</p><p class="small">Registra una visita con objetivo <strong>"Propuesta de Desarrollo"</strong> y aparecerá aquí automáticamente.</p></div>';
+    return;
+  }
+  grid.innerHTML = rows.map(function (d) {
+    var estatus = d.estatus || 'propuesto';
+    var fechaTxt = d.fecha_propuesta ? (new Date(d.fecha_propuesta)).toLocaleDateString('es-MX') : '—';
+    return '<div class="dev-card" onclick="openDetail(\'' + esc(d.id) + '\')">' +
+      '<div class="dev-card-header">' +
+        '<div class="dev-card-cliente">' + esc(d.cliente || 'Sin cliente') + '</div>' +
+        '<span class="badge ' + esc(estatus) + '">' + esc(estatus.replace('_',' ')) + '</span>' +
+      '</div>' +
+      '<div class="dev-card-meta"><i class="fas fa-seedling"></i> ' + esc(d.cultivo || '—') + ' · <i class="fas fa-map-marker-alt"></i> ' + esc(d.predio || '—') + '</div>' +
+      '<div class="dev-card-meta"><i class="fas fa-user"></i> ' + esc(d.usuario || '—') + ' · ' + esc(fechaTxt) + '</div>' +
+      '<div class="dev-card-meta" style="margin-top:8px;"><i class="fas fa-vial"></i> ' + (d.num_aplicaciones || 0) + ' aplicaciones planeadas</div>' +
+    '</div>';
+  }).join('');
+}
+
+window.openDetail = async function (id) {
+  var d = allDesarrollos.find(function (x) { return String(x.id) === String(id); });
+  if (!d) return;
+  currentDesarrollo = d;
+  document.getElementById('list-view').classList.add('hidden');
+  document.getElementById('detail-view').classList.add('active');
+  document.getElementById('detailTitle').textContent = (d.cliente || 'Sin cliente') + (d.predio ? ' — ' + d.predio : '');
+  setBadge(d.estatus);
+  document.getElementById('f_cliente').value = d.cliente || '';
+  document.getElementById('f_predio').value = d.predio || '';
+  document.getElementById('f_cultivo').value = d.cultivo || '';
+  document.getElementById('f_variedad').value = d.variedad || '';
+  document.getElementById('f_hectareas').value = d.hectareas || '';
+  document.getElementById('f_etapa').value = d.etapa_fenologica || '';
+  document.getElementById('f_problema').value = d.problema_detectado || '';
+  document.getElementById('f_nombre_cientifico').value = d.nombre_cientifico || '';
+  document.getElementById('f_num_aplicaciones').value = d.num_aplicaciones || '';
+  document.getElementById('f_objetivo').value = d.objetivo_desarrollo || '';
+  document.getElementById('f_estatus').value = d.estatus || 'propuesto';
+  document.getElementById('f_motivo_fallo').value = d.motivo_fallo || '';
+  document.getElementById('f_testimonio').value = d.testimonio_productor || '';
+  onEstatusChange();
+  hideAplForm();
+  await loadAplicaciones(d.id);
+  window.scrollTo(0, 0);
+};
+
+window.closeDetail = function () {
+  document.getElementById('detail-view').classList.remove('active');
+  document.getElementById('list-view').classList.remove('hidden');
+  currentDesarrollo = null;
+  aplicacionesActuales = [];
+  hideAplForm();
+};
+
+function setBadge(estatus) {
+  var el = document.getElementById('detailEstatus');
+  var v = estatus || 'propuesto';
+  el.className = 'badge ' + v;
+  el.textContent = v.replace('_', ' ');
+}
+
+window.onEstatusChange = function () {
+  var v = document.getElementById('f_estatus').value;
+  document.getElementById('motivoFalloWrap').style.display = (v === 'fallido') ? 'block' : 'none';
+};
+
+async function loadAplicaciones(desarrolloId) {
+  document.getElementById('aplList').innerHTML = '<p style="font-size:0.82rem;color:var(--text-soft);text-align:center;padding:14px;"><i class="fas fa-spinner fa-spin"></i> Cargando aplicaciones...</p>';
+  try {
+    var data = await fetchGS({ action: 'getAplicaciones', desarrollo_id: desarrolloId });
+    if (data.success) {
+      aplicacionesActuales = data.aplicaciones || [];
+      renderAplicaciones();
+      updateProgress();
+    }
+  } catch (e) {
+    document.getElementById('aplList').innerHTML = '<p style="font-size:0.82rem;color:var(--rojo);">Error al cargar bitácora</p>';
+  }
+}
+
+function renderAplicaciones() {
+  var list = document.getElementById('aplList');
+  if (!aplicacionesActuales.length) {
+    list.innerHTML = '<p style="font-size:0.82rem;color:var(--text-soft);text-align:center;padding:14px;">Sin aplicaciones registradas aún. Agrega la primera con el botón de abajo ↓</p>';
+    return;
+  }
+  list.innerHTML = aplicacionesActuales.map(function (a) {
+    var meta = [];
+    if (a.fecha_aplicacion) meta.push((new Date(a.fecha_aplicacion)).toLocaleDateString('es-MX'));
+    else if (a.fecha_programada) meta.push('Prog: ' + (new Date(a.fecha_programada)).toLocaleDateString('es-MX'));
+    if (a.modo_aplicacion) meta.push(a.modo_aplicacion);
+    return '<div class="apl-item ' + esc(a.estatus || 'pendiente') + '">' +
+      '<div class="apl-item-header">' +
+        '<span class="apl-item-num"><i class="fas fa-flask"></i> Aplicación #' + esc(a.numero || '?') + ' — <span style="text-transform:uppercase;font-size:0.7rem;color:var(--text-soft);">' + esc(a.estatus || 'pendiente') + '</span></span>' +
+        '<span class="apl-item-meta">' + esc(meta.join(' · ')) + '</span>' +
+      '</div>' +
+      (a.productos ? '<div class="apl-item-body"><strong>Productos:</strong> ' + esc(a.productos) + '</div>' : '') +
+      (a.resultado_observado ? '<div class="apl-item-body" style="margin-top:4px;"><strong>Resultado:</strong> ' + esc(a.resultado_observado) + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+function updateProgress() {
+  var total = Number(document.getElementById('f_num_aplicaciones').value) || aplicacionesActuales.length || 0;
+  var aplicadas = aplicacionesActuales.filter(function (a) { return a.estatus === 'aplicada'; }).length;
+  var pct = total > 0 ? Math.round((aplicadas / total) * 100) : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = aplicadas + ' de ' + total + ' aplicaciones';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+window.showAplForm = function () {
+  document.getElementById('aplForm').style.display = 'block';
+  document.getElementById('apl_numero').value = (aplicacionesActuales.length || 0) + 1;
+};
+
+window.hideAplForm = function () {
+  document.getElementById('aplForm').style.display = 'none';
+  ['apl_numero','apl_fecha_programada','apl_fecha_aplicacion','apl_productos','apl_equipo','apl_volumen','apl_ph','apl_ce','apl_temp','apl_humedad','apl_clima_post','apl_resultado','apl_notas'].forEach(function (id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('apl_estatus').value = 'pendiente';
+  document.getElementById('apl_modo').value = '';
+};
+
+window.saveAplicacion = async function () {
+  if (!currentDesarrollo) return;
+  var btn = document.getElementById('btnAplSave');
+  btn.disabled = true;
+  try {
+    var data = await fetchGS({
+      action: 'saveAplicacion',
+      desarrollo_id: currentDesarrollo.id,
+      numero: document.getElementById('apl_numero').value,
+      fecha_programada: document.getElementById('apl_fecha_programada').value,
+      fecha_aplicacion: document.getElementById('apl_fecha_aplicacion').value,
+      estatus: document.getElementById('apl_estatus').value,
+      productos: document.getElementById('apl_productos').value,
+      modo_aplicacion: document.getElementById('apl_modo').value,
+      volumen_agua_lha: document.getElementById('apl_volumen').value,
+      equipo: document.getElementById('apl_equipo').value,
+      ph_mezcla: document.getElementById('apl_ph').value,
+      ce_mezcla: document.getElementById('apl_ce').value,
+      temperatura: document.getElementById('apl_temp').value,
+      humedad: document.getElementById('apl_humedad').value,
+      clima_post: document.getElementById('apl_clima_post').value,
+      resultado_observado: document.getElementById('apl_resultado').value,
+      notas: document.getElementById('apl_notas').value
+    });
+    if (data.success) {
+      toast('Aplicación guardada ✓', 'success');
+      hideAplForm();
+      await loadAplicaciones(currentDesarrollo.id);
+    } else {
+      toast(data.message || 'Error al guardar', 'error');
+    }
+  } catch (e) {
+    toast('Error de red. Vuelve a intentar.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+window.saveDesarrollo = async function () {
+  if (!currentDesarrollo) return;
+  var btn = document.getElementById('btnSaveDev');
+  btn.disabled = true;
+  var payload = {
+    action: 'updateDesarrollo',
+    id: currentDesarrollo.id,
+    variedad: document.getElementById('f_variedad').value,
+    hectareas: document.getElementById('f_hectareas').value,
+    etapa_fenologica: document.getElementById('f_etapa').value,
+    problema_detectado: document.getElementById('f_problema').value,
+    nombre_cientifico: document.getElementById('f_nombre_cientifico').value,
+    objetivo_desarrollo: document.getElementById('f_objetivo').value,
+    num_aplicaciones: document.getElementById('f_num_aplicaciones').value,
+    estatus: document.getElementById('f_estatus').value,
+    motivo_fallo: document.getElementById('f_motivo_fallo').value,
+    testimonio_productor: document.getElementById('f_testimonio').value
+  };
+  try {
+    var data = await fetchGS(payload);
+    if (data.success) {
+      toast('Cambios guardados ✓', 'success');
+      setBadge(payload.estatus);
+      Object.assign(currentDesarrollo, payload);
+      updateProgress();
+    } else {
+      toast(data.message || 'No se pudo guardar', 'error');
+    }
+  } catch (e) {
+    toast('Error de red. Vuelve a intentar.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+function esc(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '');
+  setTimeout(function () { t.classList.add('show'); }, 10);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function () { t.classList.remove('show'); }, 3500);
+}
+</script>
+</body>
+</html>

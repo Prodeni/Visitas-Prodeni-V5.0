@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRODENI — Admin</title>
+  <!-- PostHog Analytics -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u="posthog";for(void 0!==a&&(u=a),e[u]=function(){var t=function(){var t,e,o={};return t=Array.prototype.slice.call(arguments,0),(e=Object.assign({},t.shift())).distinct_id=e.distinct_id||e.uuid,t.unshift(e),t}();return e[u].push(t),t},e[u].people=e[u].people||[],e[u].toString=function(t){var e="posthog";return"posthog"!==u&&(e+="."+u),t||(e+=" (stub)"),e},e[u].people.toString=function(){return e[u].toString(1)+".people (stub)"},o="init Ie Ts Ms Ee Es Rs capture De calculateEventProperties Os register register_once register_for_session unregister unregister_for_session js getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags getPersonProperties setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Ds $s createPersonProfile Ls Fs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ps debug Is getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(e[u],o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_CJ3WV8q4dTBCiMN3z9apBwYcSUdRtDqzBTJoBjFoV3Ws', {
+      api_host: 'https://us.i.posthog.com',
+      defaults: '2025-05-24'
+    });
+    posthog.register({ app: 'visitas' });
+  </script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1B5E20">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --verde-deep:  #1B5E20;
+      --verde-corp:  #2E7D32;
+      --verde-light: #4CAF50;
+      --amarillo:    #F9A825;
+      --tierra:      #5D4037;
+      --rojo:        #C62828;
+      --gris:        #f4f6f4;
+      --border:      #e0e8e0;
+      --text:        #1a2e1a;
+      --text-soft:   #5a7a5a;
+      --sidebar-w:   240px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Outfit', sans-serif; background: var(--gris); color: var(--text); display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ──────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--verde-deep);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      z-index: 200;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+    }
+    .sidebar-brand {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-logo {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: white;
+      padding: 3px;
+      object-fit: contain;
+    }
+    .sidebar-title { color: white; font-weight: 800; font-size: 1rem; letter-spacing: 1.5px; }
+
+    .sidebar-user {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--amarillo);
+      color: var(--verde-deep);
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-user-info { flex: 1; overflow: hidden; }
+    .sidebar-username { color: white; font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-role     { color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    .sidebar-nav { flex: 1; padding: 12px 0; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 18px;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: rgba(255,255,255,0.12); color: white; border-left-color: var(--amarillo); font-weight: 700; }
+    .nav-item i { width: 18px; text-align: center; }
+
+    .btn-logout-side {
+      margin: 16px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.8);
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-logout-side:hover { background: rgba(255,255,255,0.18); color: white; }
+
+    /* ── MAIN ─────────────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: white;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .page-title    { font-size: 1.1rem; font-weight: 800; color: var(--verde-deep); }
+    .page-subtitle { font-size: 0.78rem; color: var(--text-soft); margin-top: 2px; }
+    .topbar-right  { display: flex; align-items: center; gap: 10px; }
+    .conn-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--gris);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+    .conn-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #A5D6A7;
+    }
+    .conn-dot.offline { background: #EF9A9A; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .conn-dot.online { animation: pulse 2s infinite; }
+
+    /* ── CONTENT ──────────────────────────────────── */
+    .content { padding: 24px; flex: 1; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── STAT CARDS ───────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--verde-corp);
+    }
+    .stat-card .num { font-size: 2rem; font-weight: 800; color: var(--verde-corp); line-height: 1; }
+    .stat-card .lbl { font-size: 0.75rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    .stat-card.amarillo { border-left-color: var(--amarillo); }
+    .stat-card.amarillo .num { color: #856404; }
+    .stat-card.tierra    { border-left-color: var(--tierra); }
+    .stat-card.tierra    .num { color: var(--tierra); }
+
+    /* ── TABLE ────────────────────────────────────── */
+    .table-wrap {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .table-toolbar {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .table-title { font-weight: 700; font-size: 0.9rem; color: var(--verde-deep); }
+    .table-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-input {
+      padding: 7px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      outline: none;
+      background: #fafafa;
+    }
+    .filter-input:focus { border-color: var(--verde-corp); background: white; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      background: var(--gris);
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-soft);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f0f4f0; transition: background 0.1s; }
+    tbody tr:hover { background: #f8faf8; }
+    tbody td { padding: 10px 14px; font-size: 0.83rem; vertical-align: middle; }
+    .td-user { font-weight: 700; color: var(--verde-deep); }
+    .td-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .badge-propuesta { background: #1A2E1A; color: var(--amarillo); }
+    .badge-tecnica   { background: #E8F5E9; color: var(--verde-deep); }
+    .badge-seguimiento { background: #E3F2FD; color: #1565C0; }
+    .badge-demo      { background: #FFF3E0; color: #E65100; }
+    .badge-otro      { background: var(--gris); color: var(--text-soft); }
+
+    .table-empty {
+      padding: 48px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 0.88rem;
+    }
+
+    .btn-export {
+      padding: 8px 14px;
+      background: var(--verde-corp);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ── USERS SECTION ────────────────────────────── */
+    .user-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .user-card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .user-card-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--verde-corp);
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .user-card-avatar.admin-av { background: var(--tierra); }
+    .user-card-info { flex: 1; }
+    .user-card-name { font-weight: 700; font-size: 0.9rem; }
+    .user-card-role { font-size: 0.72rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+    .user-card-actions { display: flex; gap: 6px; }
+    .btn-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: white;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      transition: all 0.15s;
+    }
+    .btn-icon:hover { border-color: var(--verde-corp); color: var(--verde-corp); }
+    .btn-icon.danger:hover { border-color: var(--rojo); color: var(--rojo); }
+
+    /* ── FORM PANEL ───────────────────────────────── */
+    .form-panel {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+    .form-panel h3 { font-size: 0.9rem; font-weight: 800; color: var(--verde-deep); margin-bottom: 14px; }
+    .fp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fp-full { grid-column: 1 / -1; }
+    .fp-label { font-size: 0.75rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px; }
+    .fp-input, .fp-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      background: #fafafa;
+    }
+    .fp-input:focus, .fp-select:focus { border-color: var(--verde-corp); background: white; }
+    .btn-primary {
+      padding: 10px 20px;
+      background: var(--verde-corp);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary {
+      padding: 10px 20px;
+      background: white;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+
+    /* ── CONFIG SECTION ───────────────────────────── */
+    .config-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+    .config-card h3 { font-size: 0.9rem; font-weight: 800; color: var(--verde-deep); margin-bottom: 14px; }
+
+    /* ── TOAST ────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--verde-deep);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 9999;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      max-width: 90vw;
+      text-align: center;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: var(--verde-corp); }
+    .toast.error   { background: var(--rojo); }
+    .toast.warn    { background: #E65100; }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .fp-grid { grid-template-columns: 1fr; }
+      .fp-full { grid-column: 1; }
+      .mobile-menu-btn { display: flex !important; }
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--verde-deep);
+      cursor: pointer;
+      padding: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ══════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <img src="Logo.png" class="sidebar-logo" alt="PRODENI" onerror="this.style.display='none'">
+    <span class="sidebar-title">PRODENI</span>
+  </div>
+  <div class="sidebar-user">
+    <div class="sidebar-avatar admin-av" id="sideAvatar">A</div>
+    <div class="sidebar-user-info">
+      <div class="sidebar-username" id="sideUsername">Admin</div>
+      <div class="sidebar-role">Administrador</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showSection('dashboard')">
+      <i class="fas fa-chart-line"></i> Dashboard
+    </div>
+    <div class="nav-item" onclick="showSection('visitas')">
+      <i class="fas fa-clipboard-list"></i> Visitas
+    </div>
+    <div class="nav-item" onclick="showSection('usuarios')">
+      <i class="fas fa-users"></i> Usuarios
+    </div>
+    <div class="nav-item" onclick="showSection('configuracion')">
+      <i class="fas fa-cog"></i> Configuración
+    </div>
+  </nav>
+  <!-- onclick directo — siempre funciona -->
+  <button class="btn-logout-side" onclick="adminLogout()">
+    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+  </button>
+</aside>
+
+<!-- ═══ MAIN ══════════════════════════════════════════════ -->
+<div class="main">
+  <div class="topbar">
+    <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div>
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="page-subtitle" id="pageSubtitle">Resumen general del sistema</div>
+    </div>
+    <div class="topbar-right">
+      <div class="conn-badge">
+        <div class="conn-dot" id="connDot"></div>
+        <span id="connTxt">Verificando</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD ─────────────────────────────── -->
+    <section class="section active" id="sec-dashboard">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="num" id="dTotalHoy">—</div>
+          <div class="lbl">Visitas Hoy</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="dTotalSemana">—</div>
+          <div class="lbl">Esta Semana</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="dTotalMes">—</div>
+          <div class="lbl">Este Mes</div>
+        </div>
+        <div class="stat-card amarillo">
+          <div class="num" id="dTecnicos">—</div>
+          <div class="lbl">Técnicos activos</div>
+        </div>
+        <div class="stat-card tierra">
+          <div class="num" id="dPendientes">—</div>
+          <div class="lbl">Pendientes sync</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="table-title">Últimas 20 visitas</span>
+          <button class="btn-export" onclick="exportCSV()">
+            <i class="fas fa-file-csv"></i> Exportar CSV
+          </button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Técnico</th><th>Cliente</th><th>Predio</th>
+                <th>Objetivo</th><th>Cultivo</th><th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="dashTable">
+              <tr><td colspan="6" class="table-empty"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VISITAS ────────────────────────────────── -->
+    <section class="section" id="sec-visitas">
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="table-title">Todas las visitas</span>
+          <div class="table-filters">
+            <input class="filter-input" id="filtTecnico"  placeholder="Filtrar técnico"  oninput="filterVisitas()">
+            <input class="filter-input" id="filtFecha"    placeholder="Fecha (YYYY-MM-DD)" oninput="filterVisitas()">
+            <input class="filter-input" id="filtCliente"  placeholder="Cliente" oninput="filterVisitas()">
+            <button class="btn-export" onclick="exportCSV()">
+              <i class="fas fa-file-csv"></i> CSV
+            </button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Técnico</th><th>Cliente</th><th>Empresa</th><th>Predio</th>
+                <th>Objetivo</th><th>Cultivo</th><th>Etapa</th>
+                <th>Has</th><th>GPS</th><th>Fecha</th><th>Hora</th>
+              </tr>
+            </thead>
+            <tbody id="visitasTable">
+              <tr><td colspan="11" class="table-empty">Cargando datos...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── USUARIOS ───────────────────────────────── -->
+    <section class="section" id="sec-usuarios">
+
+      <!-- Formulario nuevo/editar usuario -->
+      <div class="form-panel">
+        <h3 id="userFormTitle"><i class="fas fa-user-plus"></i> Nuevo Usuario</h3>
+        <div class="fp-grid">
+          <div>
+            <label class="fp-label">Usuario <span style="color:red">*</span></label>
+            <input type="text" id="uUsername" class="fp-input" placeholder="nombre_usuario"
+                   autocapitalize="none" autocorrect="off">
+          </div>
+          <div>
+            <label class="fp-label">Contraseña <span id="passRequired" style="color:red">*</span></label>
+            <input type="text" id="uPassword" class="fp-input" placeholder="contraseña segura"
+                   autocomplete="new-password">
+            <div id="passHint" style="display:none;font-size:0.7rem;color:#888;margin-top:4px;">
+              <i class="fas fa-info-circle"></i> Deja vacío para mantener la contraseña actual
+            </div>
+          </div>
+          <div>
+            <label class="fp-label">Rol <span style="color:red">*</span></label>
+            <select id="uRole" class="fp-select">
+              <option value="tecnico">Técnico de campo</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div>
+            <label class="fp-label">Email (opcional)</label>
+            <input type="email" id="uEmail" class="fp-input" placeholder="correo@ejemplo.com">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="saveUser()">
+            <i class="fas fa-save"></i> <span id="userBtnTxt">Crear Usuario</span>
+          </button>
+          <button class="btn-secondary" onclick="cancelUserEdit()">Cancelar</button>
+        </div>
+      </div>
+
+      <!-- Lista de usuarios -->
+      <div class="user-grid" id="userGrid">
+        <div style="text-align:center;color:var(--text-soft);padding:24px;">
+          <i class="fas fa-spinner fa-spin"></i> Cargando usuarios...
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONFIGURACIÓN ──────────────────────────── -->
+    <section class="section" id="sec-configuracion">
+
+      <div class="config-card">
+        <h3><i class="fas fa-link"></i> URL del Apps Script</h3>
+        <div style="display:flex;gap:8px;align-items:flex-end;">
+          <div style="flex:1;">
+            <label class="fp-label">URL de implementación de Google Apps Script</label>
+            <input type="url" id="cfgScriptUrl" class="fp-input"
+                   placeholder="https://script.google.com/macros/s/...">
+          </div>
+          <button class="btn-primary" onclick="saveScriptUrl()">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+        </div>
+        <p style="font-size:0.75rem;color:var(--text-soft);margin-top:8px;">
+          Esta URL se guarda en el dispositivo y se usa para todas las peticiones al Sheet.
+          Cámbiala aquí si redesplegas el Apps Script.
+        </p>
+      </div>
+
+      <div class="config-card">
+        <h3><i class="fas fa-vials"></i> Probar Conexión</h3>
+        <button class="btn-primary" onclick="testConnection()">
+          <i class="fas fa-plug"></i> Probar ahora
+        </button>
+        <div id="testResult" style="margin-top:12px;font-size:0.82rem;"></div>
+      </div>
+
+      <div class="config-card">
+        <h3><i class="fas fa-paint-brush"></i> Nombre de la App</h3>
+        <div style="display:flex;gap:8px;align-items:flex-end;">
+          <div style="flex:1;">
+            <input type="text" id="cfgAppName" class="fp-input" placeholder="PRODENI">
+          </div>
+          <button class="btn-primary" onclick="saveAppName()">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script src="session.js"></script>
+<script>
+'use strict';
+
+var SCRIPT_URL = localStorage.getItem('prodeni_script_url') ||
+  'https://script.google.com/macros/s/AKfycbz8rv5sN5oTNQzKGrV5GnxJ6U5FtJEvvvmhMpvI5ZIZ52XZMc1eYTKdVK1oc2c2ZGZs7Q/exec';
+
+var currentUser  = null;
+var allVisitas   = [];
+var allUsuarios  = [];
+var editingUser  = null;   // username que se está editando
+
+// ── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+  currentUser = ProdenSession.requireAdmin();
+  if (!currentUser) return;
+
+  document.getElementById('sideAvatar').textContent  = currentUser.username[0].toUpperCase();
+  document.getElementById('sideUsername').textContent = currentUser.username;
+
+  updateConnUI();
+  window.addEventListener('online',  function() { updateConnUI(); });
+  window.addEventListener('offline', function() { updateConnUI(); });
+
+  loadConfig();
+  loadDashboard();
+  loadUsuarios();
+});
+
+// ── LOGOUT — onclick directo en HTML ─────────────────────────
+window.adminLogout = function () {
+  ProdenSession.logout();
+  window.location.href = 'index.html';
+};
+
+// ── CONECTIVIDAD ─────────────────────────────────────────────
+function updateConnUI() {
+  var online = navigator.onLine;
+  var dot = document.getElementById('connDot');
+  dot.className = 'conn-dot ' + (online ? 'online' : 'offline');
+  document.getElementById('connTxt').textContent = online ? 'Conectado' : 'Sin conexión';
+}
+
+// ── NAVEGACIÓN ────────────────────────────────────────────────
+var sectionMeta = {
+  dashboard:     { title: 'Dashboard',          sub: 'Resumen general del sistema' },
+  visitas:       { title: 'Registro de Visitas', sub: 'Todas las visitas registradas' },
+  usuarios:      { title: 'Gestión de Usuarios', sub: 'Administra el equipo de campo' },
+  configuracion: { title: 'Configuración',       sub: 'Ajustes del sistema' },
+};
+
+window.showSection = function (id) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelector('[onclick="showSection(\'' + id + '\')"]').classList.add('active');
+  document.getElementById('pageTitle').textContent    = sectionMeta[id].title;
+  document.getElementById('pageSubtitle').textContent = sectionMeta[id].sub;
+
+  // Cerrar sidebar en móvil
+  document.getElementById('sidebar').classList.remove('open');
+
+  if (id === 'visitas') renderVisitas(allVisitas);
+};
+
+// ── CARGAR DATOS ──────────────────────────────────────────────
+async function fetchGS(params) {
+  var url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
+  var res = await fetch(url, { cache: 'no-store' });
+  return res.json();
+}
+
+async function loadDashboard() {
+  var url = localStorage.getItem('prodeni_script_url') || '';
+  if (!url || url.includes('TU_URL') || url.length < 30) {
+    document.getElementById('dashTable').innerHTML =
+      '<tr><td colspan="6" class="table-empty">' +
+      '<span style="color:var(--amarillo);font-weight:700;">⚠️ Configura la URL del Apps Script en ' +
+      '<a href="#" onclick="showSection(\'configuracion\')" style="color:var(--amarillo);">Configuración</a>' +
+      '</span></td></tr>';
+    // Actualizar stats a 0
+    ['dTotalHoy','dTotalSemana','dTotalMes','dTecnicos','dPendientes'].forEach(function(id) {
+      document.getElementById(id).textContent = '0';
+    });
+    return;
+  }
+  try {
+    var data = await fetchGS({ action: 'getData' });
+    if (data.rows) {
+      allVisitas = data.rows;
+      renderDashboard(data.rows);
+      renderVisitas(data.rows);
+    }
+  } catch(e) {
+    document.getElementById('dashTable').innerHTML =
+      '<tr><td colspan="6" class="table-empty">Sin conexión — datos no disponibles</td></tr>';
+  }
+}
+
+function renderDashboard(rows) {
+  var now      = new Date();
+  var todayStr = now.toDateString();
+  var dow      = (now.getDay() + 6) % 7;
+  var lunes    = new Date(now);
+  lunes.setDate(now.getDate() - dow);
+  lunes.setHours(0,0,0,0);
+
+  var hoy    = rows.filter(function(r) { return r[0] && new Date(r[0]).toDateString() === todayStr; });
+  var semana = rows.filter(function(r) { return r[0] && new Date(r[0]) >= lunes; });
+  var mes    = rows.filter(function(r) {
+    if (!r[0]) return false;
+    var d = new Date(r[0]);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  });
+  var tecnicos = [...new Set(rows.map(function(r) { return r[1]; }))].filter(Boolean);
+
+  document.getElementById('dTotalHoy').textContent    = hoy.length;
+  document.getElementById('dTotalSemana').textContent = semana.length;
+  document.getElementById('dTotalMes').textContent    = mes.length;
+  document.getElementById('dTecnicos').textContent    = tecnicos.length;
+
+  // Últimas 20
+  var last20 = rows.slice(-20).reverse();
+  var tbody  = document.getElementById('dashTable');
+  if (!last20.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">Sin registros aún</td></tr>';
+    return;
+  }
+  tbody.innerHTML = last20.map(function(r) {
+    return '<tr>' +
+      '<td class="td-user">' + esc(r[1]) + '</td>' +
+      '<td>' + esc(r[2]) + '</td>' +
+      '<td>' + esc(r[4]) + '</td>' +
+      '<td>' + objetivoBadge(r[5]) + '</td>' +
+      '<td>' + esc(r[6]) + '</td>' +
+      '<td>' + esc(r[0]) + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function renderVisitas(rows) {
+  var f1 = document.getElementById('filtTecnico')?.value?.toLowerCase() || '';
+  var f2 = document.getElementById('filtFecha')?.value || '';
+  var f3 = document.getElementById('filtCliente')?.value?.toLowerCase() || '';
+
+  var filtered = rows.filter(function(r) {
+    if (f1 && !(r[1] || '').toLowerCase().includes(f1)) return false;
+    if (f2 && !(r[0] || '').includes(f2)) return false;
+    if (f3 && !(r[2] || '').toLowerCase().includes(f3)) return false;
+    return true;
+  });
+
+  var tbody = document.getElementById('visitasTable');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="11" class="table-empty">Sin resultados</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.slice().reverse().map(function(r) {
+    var lat = r[15] || r[13];
+    var lon = r[16] || r[14];
+    var gpsCell = (lat && lon)
+      ? '<a href="https://maps.google.com/?q=' + lat + ',' + lon +
+        '" target="_blank" style="color:var(--verde-corp);font-weight:700;font-size:0.75rem;">📍 Ver</a>'
+      : '<span style="color:#ccc">—</span>';
+    return '<tr>' +
+      '<td class="td-user">' + esc(r[1]) + '</td>' +
+      '<td>' + esc(r[2]) + '</td>' +
+      '<td>' + esc(r[3]) + '</td>' +
+      '<td>' + esc(r[4]) + '</td>' +
+      '<td>' + objetivoBadge(r[5]) + '</td>' +
+      '<td>' + esc(r[6]) + '</td>' +
+      '<td>' + esc(r[7]) + '</td>' +
+      '<td>' + esc(r[8]) + '</td>' +
+      '<td>' + gpsCell + '</td>' +
+      '<td>' + esc(r[0]) + '</td>' +
+      '<td>' + esc(r[21]||r[19]||'') + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+window.filterVisitas = function () { renderVisitas(allVisitas); };
+
+function objetivoBadge(obj) {
+  if (!obj) return '—';
+  var cls = 'badge-otro';
+  if (/propuesta/i.test(obj))    cls = 'badge-propuesta';
+  else if (/técnica|tecnica/i.test(obj)) cls = 'badge-tecnica';
+  else if (/seguimiento/i.test(obj)) cls = 'badge-seguimiento';
+  else if (/demo/i.test(obj))    cls = 'badge-demo';
+  return '<span class="td-badge ' + cls + '">' + esc(obj) + '</span>';
+}
+
+// ── USUARIOS ──────────────────────────────────────────────────
+async function loadUsuarios() {
+  var url = localStorage.getItem('prodeni_script_url') || '';
+  if (!url || url.includes('TU_URL') || url.length < 30) return;
+  try {
+    var data = await fetchGS({ action: 'getUsers' });
+    if (data.users) {
+      allUsuarios = data.users;
+      renderUsuarios(data.users);
+    }
+  } catch(e) {
+    document.getElementById('userGrid').innerHTML =
+      '<p style="color:var(--rojo);padding:16px;">Error al cargar usuarios. Verifica la URL en Configuración.</p>';
+  }
+}
+
+function renderUsuarios(users) {
+  var grid = document.getElementById('userGrid');
+  if (!users.length) {
+    grid.innerHTML = '<p style="color:var(--text-soft);padding:16px;">Sin usuarios registrados.</p>';
+    return;
+  }
+  grid.innerHTML = users.map(function(u) {
+    var isAdmin = (u.role || '').toLowerCase() === 'admin';
+    return '<div class="user-card">' +
+      '<div class="user-card-avatar ' + (isAdmin ? 'admin-av' : '') + '">' +
+        (u.username || '?')[0].toUpperCase() +
+      '</div>' +
+      '<div class="user-card-info">' +
+        '<div class="user-card-name">' + esc(u.username) + '</div>' +
+        '<div class="user-card-role">' + (isAdmin ? 'Administrador' : 'Técnico de campo') + '</div>' +
+      '</div>' +
+      '<div class="user-card-actions">' +
+        '<button class="btn-icon" onclick="editUser(\'' + esc(u.username) + '\')" title="Editar">' +
+          '<i class="fas fa-pen"></i></button>' +
+        '<button class="btn-icon danger" onclick="deleteUser(\'' + esc(u.username) + '\')" title="Eliminar">' +
+          '<i class="fas fa-trash"></i></button>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+}
+
+window.saveUser = async function () {
+  var uname = document.getElementById('uUsername').value.trim().toLowerCase();
+  var pass  = document.getElementById('uPassword').value.trim();
+  var role  = document.getElementById('uRole').value;
+  var email = document.getElementById('uEmail').value.trim();
+
+  if (!uname) { toast('El nombre de usuario es requerido', 'error'); return; }
+  if (!editingUser && !pass) { toast('La contraseña es requerida para nuevos usuarios', 'error'); return; }
+
+  try {
+    var action = editingUser ? 'updateUser' : 'createUser';
+    var params = { action: action, username: uname, role: role, email: email };
+    if (editingUser) params.oldUsername = editingUser;
+    // Solo enviar password si se escribió uno (al editar puede ir vacío)
+    if (pass) params.password = pass;
+
+    var data = await fetchGS(params);
+    if (data.success) {
+      toast(editingUser ? 'Usuario actualizado ✓' : 'Usuario creado ✓', 'success');
+      cancelUserEdit();
+      loadUsuarios();
+    } else {
+      toast(data.message || 'Error al guardar usuario', 'error');
+    }
+  } catch(e) {
+    toast('Error de conexión: ' + e.message, 'error');
+  }
+};
+
+window.editUser = function (username) {
+  var u = allUsuarios.find(function(x) { return x.username === username; });
+  if (!u) return;
+  editingUser = username;
+  document.getElementById('uUsername').value = u.username || '';
+  document.getElementById('uPassword').value = '';
+  document.getElementById('uRole').value     = (u.role || 'tecnico').toLowerCase();
+  document.getElementById('uEmail').value    = u.email || '';
+  document.getElementById('userFormTitle').innerHTML = '<i class="fas fa-user-edit"></i> Editando: <strong>' + esc(username) + '</strong>';
+  document.getElementById('userBtnTxt').textContent  = 'Guardar Cambios';
+  // Mostrar hint de contraseña opcional y quitar asterisco
+  document.getElementById('passHint').style.display     = 'block';
+  document.getElementById('passRequired').style.display = 'none';
+  document.getElementById('uPassword').placeholder = 'Nueva contraseña (opcional)';
+  // Scroll al formulario
+  document.getElementById('userFormTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+window.cancelUserEdit = function () {
+  editingUser = null;
+  document.getElementById('uUsername').value = '';
+  document.getElementById('uPassword').value = '';
+  document.getElementById('uRole').value     = 'tecnico';
+  document.getElementById('uEmail').value    = '';
+  document.getElementById('userFormTitle').innerHTML = '<i class="fas fa-user-plus"></i> Nuevo Usuario';
+  document.getElementById('userBtnTxt').textContent  = 'Crear Usuario';
+  // Resetear hints de contraseña
+  document.getElementById('passHint').style.display     = 'none';
+  document.getElementById('passRequired').style.display = 'inline';
+  document.getElementById('uPassword').placeholder = 'contraseña segura';
+};
+
+window.deleteUser = async function (username) {
+  if (!confirm('¿Eliminar al usuario "' + username + '"?\nEsta acción no se puede deshacer.')) return;
+  try {
+    var data = await fetchGS({ action: 'deleteUser', username });
+    if (data.success) {
+      toast('Usuario eliminado', 'warn');
+      loadUsuarios();
+    } else {
+      toast(data.message || 'No se pudo eliminar', 'error');
+    }
+  } catch(e) {
+    toast('Error de conexión', 'error');
+  }
+};
+
+// ── CONFIGURACIÓN ─────────────────────────────────────────────
+function loadConfig() {
+  var url = localStorage.getItem('prodeni_script_url') || '';
+  document.getElementById('cfgScriptUrl').value = url;
+  var name = localStorage.getItem('prodeni_app_name') || '';
+  document.getElementById('cfgAppName').value   = name;
+}
+
+window.saveScriptUrl = function () {
+  var url = document.getElementById('cfgScriptUrl').value.trim();
+  if (!url) { toast('Ingresa una URL válida', 'error'); return; }
+  localStorage.setItem('prodeni_script_url', url);
+  SCRIPT_URL = url;
+  // Actualizar SW
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(function(reg) {
+      (reg.active || reg.installing)?.postMessage({ type: 'SAVE_CONFIG', config: { scriptUrl: url } });
+    });
+  }
+  toast('URL guardada ✓', 'success');
+};
+
+window.saveAppName = function () {
+  var name = document.getElementById('cfgAppName').value.trim();
+  if (!name) return;
+  localStorage.setItem('prodeni_app_name', name);
+  toast('Nombre guardado ✓', 'success');
+};
+
+window.testConnection = async function () {
+  var el = document.getElementById('testResult');
+  el.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Probando conexión...';
+  try {
+    var data = await fetchGS({ action: 'ping' });
+    if (data.status === 'success') {
+      el.innerHTML = '<span style="color:var(--verde-corp);font-weight:700;">✓ Conexión exitosa — ' + (data.message || '') + '</span>';
+    } else {
+      el.innerHTML = '<span style="color:var(--rojo);">✗ El servidor respondió con error: ' + esc(JSON.stringify(data)) + '</span>';
+    }
+  } catch(e) {
+    el.innerHTML = '<span style="color:var(--rojo);">✗ Sin respuesta del servidor. Verifica la URL.</span>';
+  }
+};
+
+// ── EXPORTAR CSV ──────────────────────────────────────────────
+window.exportCSV = function () {
+  if (!allVisitas.length) { toast('No hay datos para exportar', 'warn'); return; }
+  var headers = ['Fecha','Técnico','Cliente','Empresa','Predio','Objetivo','Cultivo','Etapa','Hectáreas','Productos','Notas','Lat','Lon'];
+  var rows = allVisitas.map(function(r) {
+    return headers.map(function(_, i) { return '"' + (r[i] || '').toString().replace(/"/g, '""') + '"'; }).join(',');
+  });
+  var csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+  var a   = document.createElement('a');
+  a.href  = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = 'prodeni_visitas_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+};
+
+// ── HELPERS ───────────────────────────────────────────────────
+function esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function toast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '');
+  setTimeout(function() { t.classList.add('show'); }, 10);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+</script>
+</body>
+</html>
